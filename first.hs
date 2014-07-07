@@ -30,6 +30,16 @@ sumEveryTwo [] = []
 sumEveryTwo (x:[]) = [x]
 sumEveryTwo (x:y:xs) = (x+y):sumEveryTwo(xs)
 
---main = print (sumEveryTwo [1, 2, 3, 4]) 
-main = print (sumlist[1, 2, 3, 4]) 
+addVector::(Num a)=>(a, a)->(a, a)->(a, a)
+addVector a b = (fst a + fst b, snd a + snd b)
 
+--myMax::[Int]->Int
+--myMax [x] = x 
+--myMax (x:xs) = if x > myMax(xs))  
+--main = print (sumEveryTwo [1, 2, 3, 4]) 
+--main = print (sumEveryTwo [1, 2, 3, 4]) 
+--main = print (myMax[1, 2, 3, 4]) 
+
+main =  do 
+        print (addVector (1, 2) (3, 4)) 
+        print (sumEveryTwo [1, 2, 3, 4]) 
