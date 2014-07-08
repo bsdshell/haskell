@@ -31,7 +31,14 @@ sumEveryTwo (x:[]) = [x]
 sumEveryTwo (x:y:xs) = (x+y):sumEveryTwo(xs)
 
 addVector::(Num a)=>(a, a)->(a, a)->(a, a)
-addVector a b = (fst a + fst b, snd a + snd b)
+addVector (a, b) (c, d) = (a + c, b + d)
+--addVector a b = (fst a + fst b, snd a + snd b)
+
+addVector2::(Int, Int)->(Int, Int)
+addVector2 (a, b) = (a+b, a-b)
+
+addVector3::(Num a)=>(a, a)->(a, a)->(a, a)
+addVector3 (a, b) (c, d) = (a+c, d+b)
 
 --myMax::[Int]->Int
 --myMax [x] = x 
@@ -40,6 +47,20 @@ addVector a b = (fst a + fst b, snd a + snd b)
 --main = print (sumEveryTwo [1, 2, 3, 4]) 
 --main = print (myMax[1, 2, 3, 4]) 
 
+data Point a = Pt a a
+--Pt 3 4 ::Point Integer 
+
+fun x | x < 0 =  "cat"
+      | otherwise = "dog"
+
+
+max x y | x < y = y
+         | otherwise = x
+
+
 main =  do 
         print (addVector (1, 2) (3, 4)) 
         print (sumEveryTwo [1, 2, 3, 4]) 
+        print (fun 4) 
+        print (Main.max 1 2) 
+        print (addVector2(1, 2)) 
