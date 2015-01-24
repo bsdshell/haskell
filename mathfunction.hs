@@ -25,3 +25,4 @@ main = do
         print (addvector (1,2) (2,3))
         print (sumlist [1, 2, 3])
         print ("palindrome:" ++ show(isPalindrome(str)))
+        print (str)
