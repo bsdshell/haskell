@@ -1,5 +1,3 @@
-import Data.List(delete)
-
 fac::Int->Int
 fac 0 = 1
 fac n = n * fac(n-1)
@@ -86,11 +84,16 @@ myputStr [] = return ()
 myputStr (x:xs) = do putChar x
                      myputStr xs
 
+data Person = Person String Integer String deriving Show
+        
+getAge::Person->Integer
+getAge(Person _ n _) = n
 
+getName::Person->String
+getName(Person name _ _) = name
 
-myperm:: Eq a =>[a]->[[a]]
-myperm [] = [[]]
-myperm xs = [ x:ys | x <- xs , ys <- myperm(delete x xs)]
+getInfo::Person->String
+getInfo p@(Person _ _ _) = "(" ++ show(p) ++ ")"
 
 
 y = 
@@ -138,6 +141,33 @@ myconcat [] = []
 myconcat (x:xs) = x ++ myconcat(xs)
 
 
+--Define a tree
+data Tree a = Empty 
+            | Node a (Tree a) (Tree a) deriving Show
+
+--Create a tree
+mytree = Node 'R' 
+            (Node 'S' 
+                (Node 'T' Empty Empty)
+                (Node 'U' Empty Empty)
+            ) 
+            (Node 'T' 
+                (Node 'V' Empty Empty)
+                (Node 'W' Empty Empty)
+            ) 
+
+preorderTraversal::Tree a ->[a]
+preorderTraversal Empty = [] 
+preorderTraversal (Node a l r) = a:(preorderTraversal l) ++ (preorderTraversal r)
+ 
+inorderTraversal::Tree a ->[a]
+inorderTraversal Empty = [] 
+inorderTraversal (Node a l r) = (inorderTraversal l) ++[a]++(inorderTraversal r)
+ 
+postorderTraversal::Tree a ->[a]
+postorderTraversal Empty = [] 
+postorderTraversal(Node a l r) = (postorderTraversal l) ++ (postorderTraversal r) ++ [a]
+ 
 main =  do 
         print (addVector (1, 2) (3, 4)) 
         print (sumEveryTwo [1, 2, 3, 4]) 
@@ -155,5 +185,10 @@ main =  do
         print (y)
         print (z)
         myputStr "dog"
-        print(show(myperm [1..5]))
+        print (getName(Person "person's name" 3 "dog"))
+        print (getInfo(Person "person's name" 3 "dog"))
+
+        print(preorderTraversal mytree)
+        print(inorderTraversal mytree)
+        print(postorderTraversal mytree)
 
