@@ -6,5 +6,3 @@ countLine str=(show(length(lines str)))
 main = do
     theInput<-readFile "first.hs"
     putStrLn(length(lines(theInput)))
-
-

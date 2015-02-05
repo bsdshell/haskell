@@ -1,3 +1,14 @@
+import System.Random
+import Data.Ix
+
+
+--union two sorted disjoin lists 
+union::Ord a => ([a], [a])->[a]
+union (xs, []) = xs
+union ([], ys) = ys 
+union (x:xs, y:ys) | x < y = x:union(xs, y:ys)
+                   | otherwise = y:union(x:xs, ys)
+
 fac::Int->Int
 fac 0 = 1
 fac n = n * fac(n-1)
@@ -43,6 +54,18 @@ addVector3 (a, b) (c, d) = (a+c, d+b)
 vectorNorm::(Num a)=>(a, a)->(a, a)->(a)
 vectorNorm (a, b) (c, d) = a*c + b*d
 
+
+--quick sort
+quickSort::[Int]->[Int]
+quickSort   [] = []
+quickSort (x:xs) = quickSort ([y | y <- xs, y <= x]) ++ [x] ++ quickSort([z|z <- xs, z > x]) 
+
+
+--merge sort
+mergeSort::(Ord a)=>[a]->[a]
+mergeSort xs     | (length xs) <= 1 = xs 
+                 | otherwise = union(mergeSort(take (div (length xs) 2) xs), mergeSort(drop (div (length xs) 2) xs))
+
 myHead::[a]->a
 myHead (x:xs) = x
 
@@ -71,13 +94,33 @@ myIndex _ [] = 9
 myIndex 0 (x:xs) = x
 myIndex n (x:xs) = myIndex (n-1) xs
 
+--Return a minimum integer from a list
 minlist::[Integer] ->Integer
 minlist [] = error "list is empty" 
 minlist [x] = x 
 minlist (x:xs) = min x (minlist xs) 
 
+
+deleteIndex::Integer->[Integer]->[Integer]
+deleteIndex inx xs      | fromIntegral inx >= length xs = error "inx >= length xs" 
+deleteIndex inx (x:xs)  |         fromIntegral inx == 0 = xs 
+--deleteIndex inx (x:xs)  | otherwise                     = x:(deleteIndex (fromIntegral inx)-1 xs)
+
+--Remove all the occurrence of Char from an list Char
+removeAllChar::Eq a => a->[a]->[a]
+removeAllChar a xs = [ x | x <- xs, a /= x]
+
+--Simple sorting algorithm
+--removeFst remove the first occurrence of an integer m from an list integers  
 removeFst::Integer->[Integer]->[Integer]
-removeFst m [] = []
+removeFst y [] = []
+removeFst y (x:xs) | y == x    = xs
+                   | otherwise = x:removeFst y xs
+
+--Sort list
+mySort::[Integer]->[Integer]
+mySort [] = []
+mySort xs  = x:mySort(removeFst x xs) where x = minlist xs
 
 myputStr ::String->IO()
 myputStr [] = return ()
@@ -96,6 +139,15 @@ getInfo::Person->String
 getInfo p@(Person _ _ _) = "(" ++ show(p) ++ ")"
 
 
+clamp1::Floating a=>a->a->a->a
+clamp1 lo hi val = (lo-val)/(hi-val)
+
+clamp::Floating a=>a->a->[a]->[a]
+clamp lo hi = map(clamp1 lo hi)
+
+nat = 0:map(+1) nat
+natpairs = [(x, z-x) | z <-[0..y], x <-[0..z], z < 10 && y < 10]
+
 y = 
     let (x:_) = map (*2)[1, 2, 3]
     in x + 5
@@ -106,9 +158,6 @@ z = x + 5
 --myMax::[Int]->Int
 --myMax [x] = x 
 --myMax (x:xs) = if x > myMax(xs))  
---main = print (sumEveryTwo [1, 2, 3, 4]) 
---main = print (sumEveryTwo [1, 2, 3, 4]) 
---main = print (myMax[1, 2, 3, 4]) 
 
 
 --myFun::(Point Integer)=> Integer-> Integer 
@@ -140,6 +189,14 @@ myconcat::[[a]]->[a]
 myconcat [] = []
 myconcat (x:xs) = x ++ myconcat(xs)
 
+findAfterStar::String->Maybe Char
+findAfterStar (a:b:r) =
+    if a == '*' then Just b 
+              else findAfterStar (b:r)
+findAfterStar _ = Nothing
+
+--myFun::(Int->Int)->Int
+--myFun f x = (+) 2 x 
 
 --Define a tree
 data Tree a = Empty 
@@ -191,4 +248,26 @@ main =  do
         print(preorderTraversal mytree)
         print(inorderTraversal mytree)
         print(postorderTraversal mytree)
+        print(removeFst 3 [1, 2, 3])
+        print(removeFst 3 [3])
+        print(removeFst 3 [])
+        print(removeFst 3 [1, 2])
+        print(mySort [])
+        print(mySort [3])
+        print(mySort [3, 1, 2])
+        print(clamp 2 9 [1, 3, 4])
+        print(natpairs)
+        print(removeAllChar 'a' ['b', 'a', 'e', 'a'])
+        print(removeAllChar 'a' [])
+        print(findAfterStar "*b*")
+        g <- getStdGen
+        --print $ take 10 (randomRs('a', 'z') g)
+
+        num <- randomIO::IO Int 
+        print $ num
+        print y
+        print (([x| x <- [1..10], mod x 2 == 0], [y| y <- [4..15], mod y 2 == 1]))
+        print (union([x| x <- [1..10], mod x 2 == 0], [y| y <- [4..15], mod y 2 == 1]))
+        print (mergeSort [2, 1, 4])
+        
 
