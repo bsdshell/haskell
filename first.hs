@@ -86,16 +86,35 @@ myputStr [] = return ()
 myputStr (x:xs) = do putChar x
                      myputStr xs
 
+substrings::[Char]->[[Char]]
+substrings []     = []
+substrings (x:xs) = substrings' (x:xs) ++ substrings xs where
+  substrings' []     = []
+  substrings' (y:ys) = [y] : [ (y:s) | s <- substrings' ys ]
+
+longest []     = []
+longest (x:xs) = if length x > length (longest xs) then x else (longest xs)
+
+newlongest []     = []
+newlongest (x:xs) = if length x > length max then x else max 
+    where max = newlongest xs
+
+
+
+myp [] = []
+myp (x:xs) = xs 
+
+--substring::[Char]->[[Char]]
+--substring [] = []
+--substring (x:xs) = [x]:[ (x:s) | s <- substring xs] 
+
+
 
 
 myperm:: Eq a =>[a]->[[a]]
 myperm [] = [[]]
 myperm xs = [ x:ys | x <- xs , ys <- myperm(delete x xs)]
 
-
-y = 
-    let (x:_) = map (*2)[1, 2, 3]
-    in x + 5
 
 z = x + 5
     where (x:_) = map(*100)[1, 2, 3]
@@ -152,8 +171,8 @@ main =  do
         print (ldf 2 100)
         print (prime 999999999999331111111199911)
         print (myfun (Baz 3))
-        print (y)
         print (z)
         myputStr "dog"
         print(show(myperm [1..5]))
+        print(show(substrings "abc"))
 
