@@ -1,1 +1,12 @@
-abcdefghijklmnopqrstuvwxyzAppend stuff
+1. abcdefghijklmnopqrstuvwxyzAppend stuff
+2 abcdefghijklmnopqrstuvwxyzAppend stuff
+3 abcdefghijklmnopqrstuvwxyzAppend stuff
+1 . abcdefghijklmnopqrstuvwxyzAppend stuff
+1 . abcdefghijklmnopqrstuvwxyzAppend stuff
+1 . abcdefghijklmnopqrstuvwxyzAppend stuff
+<span>this is line 1</span>
+<span>this is line 2 </span>
+<span>this is line 3 </span>
+<span>this git line 1</span>
+<span>this is line 2 </span>
+<span>this git line 3 </span>

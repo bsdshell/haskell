@@ -1,7 +1,6 @@
 import System.Random
 import Data.Ix
 
-
 --union two sorted disjoin lists 
 union::Ord a => ([a], [a])->[a]
 union (xs, []) = xs
@@ -32,7 +31,7 @@ productlist::[Integer]->Integer
 productlist [] = 1 
 productlist (x:xs) = x*productlist(xs) 
 
-rev::[Char]->[Char]
+rev::[a]->[a]
 rev [] = [] 
 rev list = last(list):rev(init(list))
 
@@ -101,10 +100,9 @@ minlist [x] = x
 minlist (x:xs) = min x (minlist xs) 
 
 
-deleteIndex::Integer->[Integer]->[Integer]
-deleteIndex inx xs      | fromIntegral inx >= length xs = error "inx >= length xs" 
-deleteIndex inx (x:xs)  |         fromIntegral inx == 0 = xs 
---deleteIndex inx (x:xs)  | otherwise                     = x:(deleteIndex (fromIntegral inx)-1 xs)
+--deleteIndex::Integer->[Integer]->[Integer]
+--deleteIndex inx xs      | fromIntegral inx >= length xs = error "inx >= length xs" 
+--deleteIndex inx (x:xs)  | = deleteIndex inx xs 
 
 --Remove all the occurrence of Char from an list Char
 removeAllChar::Eq a => a->[a]->[a]
@@ -122,12 +120,15 @@ mySort::[Integer]->[Integer]
 mySort [] = []
 mySort xs  = x:mySort(removeFst x xs) where x = minlist xs
 
+myprint::String->IO()
+myprint x = putStrLn ("print[" ++ x ++ "]")
+
 myputStr ::String->IO()
 myputStr [] = return ()
 myputStr (x:xs) = do putChar x
                      myputStr xs
 
-<<<<<<< HEAD
+
 substrings::[Char]->[[Char]]
 substrings []     = []
 substrings (x:xs) = substrings' (x:xs) ++ substrings xs where
@@ -142,7 +143,6 @@ newlongest (x:xs) = if length x > length max then x else max
     where max = newlongest xs
 
 
-
 myp [] = []
 myp (x:xs) = xs 
 
@@ -151,7 +151,6 @@ myp (x:xs) = xs
 --substring (x:xs) = [x]:[ (x:s) | s <- substring xs] 
 
 
-=======
 data Person = Person String Integer String deriving Show
         
 getAge::Person->Integer
@@ -159,7 +158,6 @@ getAge(Person _ n _) = n
 
 getName::Person->String
 getName(Person name _ _) = name
->>>>>>> 2a789ce2ffa2c8a0c682a957621ef9ab153f2860
 
 getInfo::Person->String
 getInfo p@(Person _ _ _) = "(" ++ show(p) ++ ")"
@@ -170,12 +168,6 @@ clamp1 lo hi val = (lo-val)/(hi-val)
 
 clamp::Floating a=>a->a->[a]->[a]
 clamp lo hi = map(clamp1 lo hi)
-
-nat = 0:map(+1) nat
-natpairs = [(x, z-x) | z <-[0..y], x <-[0..z], z < 10 && y < 10]
-
-z = x + 5
-    where (x:_) = map(*100)[1, 2, 3]
 
 --myMax::[Int]->Int
 --myMax [x] = x 
@@ -217,9 +209,6 @@ findAfterStar (a:b:r) =
               else findAfterStar (b:r)
 findAfterStar _ = Nothing
 
---myFun::(Int->Int)->Int
---myFun f x = (+) 2 x 
-
 --Define a tree
 data Tree a = Empty 
             | Node a (Tree a) (Tree a) deriving Show
@@ -235,6 +224,18 @@ mytree = Node 'R'
                 (Node 'W' Empty Empty)
             ) 
 
+--Create a tree
+mytreeNum = Node 1 
+            (Node 2 
+                (Node 3 Empty Empty)
+                (Node 4 Empty Empty)
+            ) 
+            (Node 5 
+                (Node 6 Empty Empty)
+                (Node 7 Empty Empty)
+            ) 
+
+
 preorderTraversal::Tree a ->[a]
 preorderTraversal Empty = [] 
 preorderTraversal (Node a l r) = a:(preorderTraversal l) ++ (preorderTraversal r)
@@ -247,26 +248,93 @@ postorderTraversal::Tree a ->[a]
 postorderTraversal Empty = [] 
 postorderTraversal(Node a l r) = (postorderTraversal l) ++ (postorderTraversal r) ++ [a]
  
+--[file=composite.html title=""
+-- function composition foldable
+f1::Int->Int
+f1 a = a * 10 
+
+f2::Int->Int
+f2 a = a - 10 
+compose = (f1.f2) 10 
+--] 
+
+--[file=foldable.html   title="" 
+-- identity = [] 
+concat2::[[Int]]->[Int]
+concat2 vals = foldr (\val acc->val ++ acc) [] vals
+
+-- identity = 0
+sum1::[Int]->Int
+sum1 vals = foldl (\x y-> x + y) 0 vals 
+
+-- identity = 1 
+product1::[Int]->Int
+product1 vals = foldl (\x y-> x * y) 1 vals 
+
+-- identity = [] 
+concat1::[[Char]]->String
+concat1 vals = foldl (\x y->concat[x, y]) [] vals 
+--]
+
+-- simple sorted algorithm 
+mysort::[Int]->[Int]
+mysort [] = []
+mysort [x] = [x]
+mysort (x:xs) | x <= head (mysort xs) = x:mysort xs   
+              | otherwise = mysort(xs ++ [x])
+-- average of a list
+myAverage::[Int]->Float
+myAverage [] = 0 
+myAverage xs = fromIntegral(sum xs)/fromIntegral(length xs) 
+
+prefix::String->String->Bool
+prefix [] ys = True
+prefix xs [] = False
+prefix (x:xs) (y:ys) = x == y && prefix xs ys
+
+--[file=instance.html title=""
+--class  Eq a  where
+   --(==), (/=) :: a -> a -> Bool
+   --x /= y     =  not (x == y)
+   --x == y     =  not (x /= y)
+
+-- instance class
+data Myfoo = Myfoo{int::Integer, str::String}
+instance Eq Myfoo where 
+    (Myfoo int1 str1) == (Myfoo int2 str2) = (int1 == int2) && str1 == str2
+--]
+
+
+-- functionn in Haskell 
+--{In GHCi, we have to use let to define a function
+-- let myfun x = x + 1
+-- But in *.hs file, we define function as following
+--myfun x = x + 1
+--}
+
+myfun1 x = x + 1
+
+values::[[Int]]
+values = [[1, 2], [3, 4]]
+
+mymax::Int->Int->Int
+mymax a b = if a > b then a else b 
+ff1 = mymax 1
+ff2 = ff1 4
+
+fInt::Integer->()
+fInt x = ()
+
+--[file=functor.html   title="" 
+data MyMaybe a = MyJust a | MyNothing deriving (Show)
+ 
+instance Functor MyMaybe where
+    fmap f MyNothing = MyNothing
+    fmap f (MyJust a) = MyJust (f a)
+--] 
+
+
 main =  do 
-        print (addVector (1, 2) (3, 4)) 
-        print (sumEveryTwo [1, 2, 3, 4]) 
-        print (fun 4) 
-        print (Main.max 1 2) 
-        print (addVector2(1, 2)) 
-        print (vectorNorm (1, 2)(4, 5))
-        print (myHead [1, 2, 3])
-        print (myQuickSort[1, 3, 2])
-        print (myMap (myAdd 1) [1, 3, 2])
-        print (divids 3 10)
-        print (ldf 2 100)
-        print (prime 999999999999331111111199911)
-        print (myfun (Baz 3))
-        print (z)
-        myputStr "dog"
-<<<<<<< HEAD
-        print(show(myperm [1..5]))
-        print(show(substrings "abc"))
-=======
         print (getName(Person "person's name" 3 "dog"))
         print (getInfo(Person "person's name" 3 "dog"))
 
@@ -281,7 +349,6 @@ main =  do
         print(mySort [3])
         print(mySort [3, 1, 2])
         print(clamp 2 9 [1, 3, 4])
-        print(natpairs)
         print(removeAllChar 'a' ['b', 'a', 'e', 'a'])
         print(removeAllChar 'a' [])
         print(findAfterStar "*b*")
@@ -290,10 +357,24 @@ main =  do
 
         num <- randomIO::IO Int 
         print $ num
-        print y
         print (([x| x <- [1..10], mod x 2 == 0], [y| y <- [4..15], mod y 2 == 1]))
         print (union([x| x <- [1..10], mod x 2 == 0], [y| y <- [4..15], mod y 2 == 1]))
         print (mergeSort [2, 1, 4])
-        
->>>>>>> 2a789ce2ffa2c8a0c682a957621ef9ab153f2860
+        print (fac 3)
+        print (rev [1, 2]) 
+        print ((f1 . f2) 1) 
+        print (values) 
+        print (sum1 [1, 2, 3])
+        print (product1 [1, 2, 3])
+        print (concat1 ["a", "b", "c"])
+        print (foldr (+) 0 (preorderTraversal mytreeNum)) 
+        print (mysort [2, 1, 3, 0, 9, 20, 3, 1, 4]) 
+        print (myAverage [1, 2])
+        print (Myfoo 3 "dog" == Myfoo 3 "dog")
+        print (Myfoo 3 "cat" == Myfoo 3 "dog")
+        print ff2 
+        print compose 
+        print (concat2 values) 
+        print (fInt 3)
+        myprint "dog"
 
