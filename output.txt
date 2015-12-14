@@ -1,12 +1,12 @@
-1. abcdefghijklmnopqrstuvwxyzAppend stuff
-2 abcdefghijklmnopqrstuvwxyzAppend stuff
-3 abcdefghijklmnopqrstuvwxyzAppend stuff
-1 . abcdefghijklmnopqrstuvwxyzAppend stuff
-1 . abcdefghijklmnopqrstuvwxyzAppend stuff
-1 . abcdefghijklmnopqrstuvwxyzAppend stuff
-<span>this is line 1</span>
-<span>this is line 2 </span>
-<span>this is line 3 </span>
-<span>this git line 1</span>
-<span>this is line 2 </span>
-<span>this git line 3 </span>
+this <span>git</span> line <span>vim</span> 1
+this is line <span>vim</span>2 
+this <span>git</span> line 3 
+this <span style="color#FFF;">git</span> line <span style="color#FFF;">vim</span> 1
+this is line <span style="color#FFF;">vim</span>2 
+this <span style="color#FFF;">git</span> line 3 
+this <span style="color#AEC;">git</span> line <span style="color#AEC;">vim</span> 1
+this is line <span style="color#AEC;">vim</span>2 
+this <span style="color#AEC;">git</span> line 3 
+this <span style="color:#AEC;">git</span> line <span style="color:#AEC;">vim</span> 1
+this is line <span style="color:#AEC;">vim</span>2 
+this <span style="color:#AEC;">git</span> line 3 
