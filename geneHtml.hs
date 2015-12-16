@@ -20,9 +20,10 @@ htmlTab left right list = map(left ++) $ map (++ right) list
 html::String->String->[String]->String
 html open close list = open ++ (unlines list) ++ close
 
+
 -- matches `[ xxx `] e.g replace <pre> xxx </pre>
-myfun::String->String->String->String
-myfun open close str = op str rep
+codeHighLight::String->String->String->String
+codeHighLight open close str = op str rep
                         where op = subRegex (mkRegex pat)  
                               rep = open ++ "\\1" ++ close
                               pat = codeOpen ++ "(([^`]*|\n*)*)" ++ codeClose 
@@ -32,6 +33,7 @@ myfun open close str = op str rep
 
 htmlOpen      =  "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"mycss/style.css\"/></head><body class=\"htmlbg\">"
 htmlClose     =  "</body></html>"
+
 
 ldiv          =  "<div class=\"tex\">"
 rdiv          =  "</div>"
@@ -64,6 +66,8 @@ numName     = "^[[:space:]]*[0-9]+\\.[[:space:]]+"
 spanNumOpen = "<span class=\"num\">"
 spanNumCose = "</span>"
 
+html_tab = "^[[:space:]]*(<[^<>]+>[^<>]*<[[:space:]]*/[^<>]+>.*$)"
+
 main = do
     print("geneHtml input.txt out.txt")
     [inFile, outFile] <- getArgs
@@ -76,13 +80,14 @@ main = do
     let r_header  = mkRegex header
     let r_comment = mkRegex comment
 
-    let list0      = style keyword openSpan closeSpan line
+    let list0     = style keyword openSpan closeSpan line
     let list1     = style title titleOpen titleClose list0 
     let list2     = style comment commentOpen commentClose list1
     let list3     = style header headerOpen headerClose list2
     let list4     = style numName spanNumOpen spanNumCose list3
-    let list5     = replace "^\\s*<.*$" "\\0<br>" list4
-    let list6     = myfun preOpen preClose (unlines list5):[]
+    --let list5     = replace "^\\s*<.*$" "\\0<br>" list4
+    let list5     = replace html_tab "\\0<br>" list4
+    let list6     = codeHighLight preOpen preClose (unlines list5):[]
     writeFile outFile $ html htmlOpen htmlClose list6 
 
     putStr contents
