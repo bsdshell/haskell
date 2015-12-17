@@ -26,10 +26,16 @@ codeHighLight::String->String->String->String
 codeHighLight open close str = op str rep
                         where op = subRegex (mkRegex pat)  
                               rep = open ++ "\\1" ++ close
-                              pat = codeOpen ++ "(([^`]*|\n*)*)" ++ codeClose 
+                              pat = codeOpen ++ "(([^`]|`[^[]]*|\n*)*)" ++ codeClose --fix it
                                   where 
-                                        codeOpen = "^[[:space:]]*`\\["
-                                        codeClose = "[[:space:]]*`\\]$"
+                                        codeOpen = "^[[:space:]]*`\\[[[:space:]]*$"
+                                        codeClose = "[[:space:]]*`\\][[:space:]]*$"
+
+lt   = "(<)"
+gt   = "(>)"
+
+html_lt = "&lt;"
+html_gt = "&gt;"
 
 htmlOpen      =  "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"mycss/style.css\"/></head><body class=\"htmlbg\">"
 htmlClose     =  "</body></html>"
@@ -80,15 +86,17 @@ main = do
     let r_header  = mkRegex header
     let r_comment = mkRegex comment
 
-    let list0     = style keyword openSpan closeSpan line
-    let list1     = style title titleOpen titleClose list0 
-    let list2     = style comment commentOpen commentClose list1
-    let list3     = style header headerOpen headerClose list2
-    let list4     = style numName spanNumOpen spanNumCose list3
+    let list0     = replace lt html_lt line
+    let list1     = replace gt html_gt list0 
+    let list2     = style keyword openSpan closeSpan list1 
+    let list3     = style title titleOpen titleClose list2 
+    let list4     = style comment commentOpen commentClose list3
+    let list5     = style header headerOpen headerClose list4
+    let list6     = style numName spanNumOpen spanNumCose list5
     --let list5     = replace "^\\s*<.*$" "\\0<br>" list4
-    let list5     = replace html_tab "\\0<br>" list4
-    let list6     = codeHighLight preOpen preClose (unlines list5):[]
-    writeFile outFile $ html htmlOpen htmlClose list6 
+    let list7     = replace html_tab "\\0<br>" list6
+    let list8     = codeHighLight preOpen preClose (unlines list7):[]
+    writeFile outFile $ html htmlOpen htmlClose list8 
 
     putStr contents
     hClose handle
