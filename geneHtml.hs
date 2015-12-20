@@ -20,7 +20,6 @@ htmlTab left right list = map(left ++) $ map (++ right) list
 html::String->String->[String]->String
 html open close list = open ++ (unlines list) ++ close
 
-
 -- matches `[ xxx `] e.g replace <pre> xxx </pre>
 codeHighLight::String->String->String->String
 codeHighLight open close str = op str rep
@@ -39,10 +38,6 @@ html_gt = "&gt;"
 
 htmlOpen      =  "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"mycss/style.css\"/></head><body class=\"htmlbg\">"
 htmlClose     =  "</body></html>"
-
-
-ldiv          =  "<div class=\"tex\">"
-rdiv          =  "</div>"
 
 openSpan      =  "<span class=\"keyword\">"
 closeSpan     =  "</span>"
@@ -93,7 +88,6 @@ main = do
     let list4     = style comment commentOpen commentClose list3
     let list5     = style header headerOpen headerClose list4
     let list6     = style numName spanNumOpen spanNumCose list5
-    --let list5     = replace "^\\s*<.*$" "\\0<br>" list4
     let list7     = replace html_tab "\\0<br>" list6
     let list8     = codeHighLight preOpen preClose (unlines list7):[]
     writeFile outFile $ html htmlOpen htmlClose list8 
