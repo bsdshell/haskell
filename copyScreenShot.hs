@@ -24,8 +24,12 @@ main = do
 
     -- mapM_::Monad m => (a -> m b) -> [a]-> m()
     -- uncurry::(a->b->c) -> (a, b) -> c
+    -- curry::(a, b)->c -> a->b->c
     -- removeFile::filePath -> IO()
     -- copyFile::filePath -> IO()
-    mapM_(uncurry copyFile) $ zip fullDesk fullScreen 
+    -- zip::[a]->[b]->[(a,b)]
+    -- zipWith::(a->b->c)->[a]->[b]->[c]
+    -- mapM_(uncurry copyFile) $ zip fullDesk fullScreen 
+    sequence_ (zipWith copyFile fullDesk fullScreen)
     print $ "Remove all png files from: " ++ desktopdir
     mapM_(removeFile) fullDesk 
