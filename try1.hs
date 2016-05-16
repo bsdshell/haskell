@@ -1,56 +1,24 @@
-import Text.Regex
-import Text.Regex.Posix
-import Data.Bits
-import System.FilePath.Posix
+import System.IO
 import System.Environment
-
-
-prime = sieve [2..]
-    where sieve (p:xs) = p:sieve[ x | x <- xs, x `mod` p /= 0]
-
---mergeSortList::[Int]->[Int]->[Int]
---mergeSortList [] r          = r
---mergeSortList l []          = l
---mergeSortList (x:xs) (y:ys) = if x < y then x:(mergeSortList xs (y:ys)) else y:(mergeSortList (x:xs) ys)
-
-
-split::[Int]->([Int], [Int])
-split [] = ([], []) 
-split [x] = ([x], [])
-split (x:y:rest) = (x:xs, y:xy)   
-                where
-                    (xs, xy) = split rest
-
-quickSort::[Int]->[Int]
-quickSort [] = []
-quickSort [x] = [x]
-quickSort l = quickSort(left) ++ p:[] ++ quickSort right 
-                    where
-                        left =  [x | x <- init l, x < p]
-                        right = [x | x <- init l, x >= p]
-                        p = last l 
-
-mergeSort::[Int]->[Int]
-mergeSort [] = []
-mergeSort [x] = [x]
-mergeSort l = merge(mergeSort left) (mergeSort right) 
-                where
-                    half = (length l) `div` 2
-                    left = take half l
-                    right = drop half l  
-
-                    merge::[Int]->[Int]->[Int]
-                    merge [] r = r
-                    merge l [] = l
-                    merge (x:xs) (y:ys)  = if x < y
-                                            then 
-                                               x:merge xs (y:ys) 
-                                            else
-                                               y:merge (x:xs) ys 
-
-let (xs, ys) = aplitAt 2 [1..10] in xs ++ [100] ++ ys
+import Text.Regex.Posix
+import Text.Regex
+import AronModule
+import Data.List.Split
+import qualified Data.Text as Text
 
 
 
 main = do
-        print $ quickSort [2, 1]
+    let list2 = [["a", "b", "c"], ["1", "2"], []]
+    let list3 = init list2
+    mapM(print) list3 
+    let list4 = map(\x -> tail x) $ list3
+    putStrLn("list4-----------------------")
+    mapM(print) list4 
+    putStrLn("------------------------")
+    let listTail =  map(\x-> tail x) $ init list2
+    mapM_(mapM_(\x -> print $ "[" ++ x ++ "]")) listTail
+
+    putStrLn("listTail-----------------------")
+    mapM(print) listTail 
+    putStrLn("listTail-----------------------")

@@ -62,6 +62,12 @@ f [] l = []
 f l [] = [] 
 f (x:xs) l = map(+x) l ++ (f xs l)
 
+mymerge::[String]->[String]->[[String]]
+mymerge [] [] = []:[]
+mymerge [] [y] = [y]:[] 
+mymerge [x] [] = [x]:[] 
+mymerge (x:xs) (y:xy) = [x,y]:mymerge xs xy
+
 main = do
     let x = [1..10]
     print "dog"
@@ -80,3 +86,6 @@ main = do
     print m2
     print zz
     print $ f [1..2] [2..3]
+    putStrLn "=========================="
+    print $ mymerge ["a", "b"] ["1", "2"]
+    putStrLn "=========================="

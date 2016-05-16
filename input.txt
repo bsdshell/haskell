@@ -1,10 +1,18 @@
-    [Haskell zip and zipWith]
-    :zip::[a]->[b]->[(a,b)]
-    `[
-        zip [1..3] [1..3]  = [(1,1)(2,2)(3,3)] 
-    `]
+xxfor1 
+for(int i=0; i<10; i++){
+}
 
+xxfor2 
+for(int j=0; j<10; j++){
+    for(int k=0; k<10; k++){
+        System.out.println("cool")
+    }
+}
 
-    [[ src=image.png w=20 h=40 ]]
-    [[ src=image.png w=10 h=30 ]]
-    [[ src=image.png w=50 h=20 ]]
+xxmat 
+A= \begin{bmatrix}
+1 & 2 & 3\\
+4 & 5 & 6\\
+7 & 8 & 9
+\end{bmatrix}
+

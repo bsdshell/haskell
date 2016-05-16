@@ -41,7 +41,6 @@ main = do
     let r_header = mkRegex header 
     let r_comment = mkRegex comment
 
-    
     let op    = subRegex r
     let pat   = openSpan ++ "\\0" ++ closeSpan
     let list  = map (`op` pat) line

@@ -184,7 +184,9 @@ main = do
 
     let oddList    = fst $ splitList splitcode
     let evenList   = snd $ splitList splitcode
-    print evenList
+
+--    let evenList1 = replace lt html_lt evenList 
+--    let evenList2 = replace gt html_gt evenList1 
 
 
 

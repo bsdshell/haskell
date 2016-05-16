@@ -1,7 +1,4 @@
 
-v1 = [1..2]
-v2 = [2..3]
-
 f::[Int]->[Int]->[Int]
 f [] l = [] 
 f l [] = [] 
@@ -49,34 +46,36 @@ addMat [] _ = []
 addMat _ [] = []
 addMat (x:xs) (y:ys) = (zipWith(\x1 y1 ->x1+y1) x y) : (addMat xs ys)
 
+v1 = [1..2]
+v2 = [2..3]
+
 m1 = [[1, 2], 
       [3, 4]
      ]
+
 m2 = [[5, 7], 
       [8, 9]
      ]
 
+m3 = [[1, 2, 3],
+      [0, (-2), 1],
+      [1, 1, 0]
+      ]
+
 multiMat::[[Int]]->[[Int]]->[[Int]]
 multiMat a b = [ [sum $ zipWith (*) ar bc | bc <- (transpose b)]  | ar <- a]
+
+--toMatID::[[Int]]->[[Int]]
 
 mmult::[[Int]] -> [[Int]] -> [[Int]] 
 mmult a b = [ [ sum $ zipWith (*) ar bc | bc <- (transpose b) ] | ar <- a ]
  
-
 main = do
     print "Hello World"
-    print v1
-    print v2
-    print $ f v1 v2 
-    print $ mulVect v1 v2 
-    print $ f3 v1 v2 
-    print "=================================="
-    print m1
-    print m2
-    print $ mul m1 m2
-    let tm2 = transpose m2
-    print tm2
-    print $ mulMat m1 m2 
-    print $ multiMat m1 m2
-    print $ mmult m1 m2
-    print $"v=" ++ (show "dog") 
+    mapM_ print m3
+    print "-------------"
+    mapM_ print $ mmult m3 m3
+    print "-------------"
+    mapM_ print $ mmult (mmult m3 m3) m3
+    print "-------------"
+    mapM_ print $ addMat m3 m3
