@@ -29,13 +29,13 @@ main = do
     mapM_ (print) list2
     putStrLn "listHead ============================"
 --    let listHead = map(\x-> Text.unpack(Text.strip (Text.pack $ head x))) $ init list2
-    let listHead = map(\x-> (head x)) $ init list2
+    let listHead = map(\x-> " " ++ mystrip ( (head x)) ++ " ") $ list2
     mapM(print) listHead
-    let listTail =  map(\x -> tail x) $ init list2 
+    let listTail =  map(\x -> tail x) $ list2 
     putStrLn "listTail ==========================="
     mapM(print) listTail 
     putStrLn "listCR===================================="
-    let listCR =  map(map(\x -> "\\<CR>"++ mystrip x)) $ map(\x-> tail x) $ init list2
+    let listCR =  map(map(\x -> "\\<CR>"++ mystrip x)) $ map(\x-> tail x) $ list2
     mapM(mapM(print)) listCR 
     putStrLn "===================================="
     let listLeft =  map(\x-> "" ++ (head x) ) listCR 
@@ -47,23 +47,13 @@ main = do
     putStrLn "listRight===================================="
     mapM(print) listRight 
     putStrLn "===================================="
-    let mid = map(\x->  tail $ init x ) listCR
-    putStrLn "mid ===================================="
-    mapM(print) mid 
-    putStrLn "===================================="
-    let left = zipWith(\x y -> x:y) listLeft mid 
-    let full = zipWith(\x y -> x ++ (y:[]) ) left listRight 
-    putStrLn "left ===================================="
-    mapM(print) left  
-    putStrLn "===================================="
-    putStrLn "full ===================================="
-    mapM(print) full 
-    putStrLn "newfull ===================================="
-    let newfull = map(map(++"\n")) full
+
+    -- let newfull = map(map(++"\n")) full
+    let newfull = map(map(++"\n")) listCR 
     mapM(print) newfull 
     putStrLn "===================================="
 
-    let auto  = "autocmd BufEnter *.vimrc,*.tex,*.java iabbr <buffer> "
+    let auto  = "autocmd BufEnter *.vimrc,*.tex,*.java,*.h,*.m iabbr <buffer> "
     let comList = map(\x -> auto++ x ++ "\n") listHead 
     putStrLn "comList ================================="
     mapM(print) comList 
