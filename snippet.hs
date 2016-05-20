@@ -16,8 +16,8 @@ mystrip s  = Text.unpack(Text.strip (Text.pack s ))
 
 main = do
     --[inFile, outFile] <- getArgs
-    let inFile  = "/Users/cat/myfile/github/snippets/objectivec.m" 
-    let outFile = "/Users/cat/myfile/github/snippets/objectivec.vimrc" 
+    let inFile  = "/Users/cat/myfile/github/snippets/snippet.m" 
+    let outFile = "/Users/cat/myfile/github/snippets/snippet.vimrc" 
     handle <- openFile inFile ReadMode
     contents <- hGetContents handle
     let line = lines contents
@@ -32,6 +32,12 @@ main = do
     let listHead = map(\x-> " " ++ mystrip ( (head x)) ++ " ") $ list2
     mapM(print) listHead
     let listTail =  map(\x -> tail x) $ list2 
+
+    putStrLn "splitList ============================"
+    let splitList = map(map(mystrip)) $ map(splitRegex(mkRegex ":")) listHead
+    mapM(print) splitList 
+    putStrLn "===================================="
+
     putStrLn "listTail ==========================="
     mapM(print) listTail 
     putStrLn "listCR===================================="
@@ -54,8 +60,12 @@ main = do
     putStrLn "===================================="
 
     let auto  = "autocmd BufEnter *.vimrc,*.tex,*.java,*.h,*.m iabbr <buffer> "
-    let comList = map(\x -> auto++ x ++ "\n") listHead 
+    --let comList = map(\x -> "autocmd BufEnter " ++ tail x ++ " iabbr <buffer> " ++ head x ++ " \n") splitList
+    let comList = map(\x -> "autocmd BufEnter " ++ last(x) ++ " iabbr <buffer> " ++ head(x) ++ " \n" ) splitList
+    mapM(print) comList 
+    --let comList = map(\x -> auto++ x ++ "\n") listHead 
     putStrLn "comList ================================="
+
     mapM(print) comList 
     putStrLn "comList2 ===================================="
     let comList2 = map(\x -> x:[]) comList
@@ -75,5 +85,7 @@ main = do
 
     let str = foldl (\x y -> x ++ y) "" $  autoCode 
     writeFile outFile $ str  
-    --putStr contents
+
+
+        --putStr contents
     hClose handle

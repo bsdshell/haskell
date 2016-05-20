@@ -68,6 +68,10 @@ mymerge [] [y] = [y]:[]
 mymerge [x] [] = [x]:[] 
 mymerge (x:xs) (y:xy) = [x,y]:mymerge xs xy
 
+concat2::[[Int]]->[Int]
+concat2 vals = foldr(\val acc -> val ++ acc) [] vals
+
+
 main = do
     let x = [1..10]
     print "dog"
@@ -88,4 +92,6 @@ main = do
     print $ f [1..2] [2..3]
     putStrLn "=========================="
     print $ mymerge ["a", "b"] ["1", "2"]
+    putStrLn "concat2 =========================="
+    print $ concat2 [[1,2], [3, 4]]
     putStrLn "=========================="

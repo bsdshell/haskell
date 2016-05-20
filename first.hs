@@ -262,6 +262,16 @@ compose = (f1.f2) 10
 -- identity = [] 
 concat2::[[Int]]->[Int]
 concat2 vals = foldr (\val acc->val ++ acc) [] vals
+-- concat2 [[1, 2], [3, 4]] =  [1, 2] ++ ([3, 4] ++ []) = [1, 2, 3, 4]
+
+fo = foldr ((:)) [] [1, 2, 3] 
+-- output [1, 2, 3]
+
+-- alternative definition of map 
+map'::(a->b)->[a]->[b]
+map' f = foldr ((:).f) [] 
+-- map' (1+) 1 [1, 2, 3] = [2, 3, 4]
+
 
 -- identity = 0
 sum1::[Int]->Int
@@ -377,4 +387,6 @@ main =  do
         print (concat2 values) 
         print (fInt 3)
         myprint "dog"
+        print $ map' (1+) [1, 2, 3]
+        print fo
 

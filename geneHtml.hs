@@ -1,10 +1,14 @@
 import System.IO
+import System.Directory
 import System.Environment
 import Text.Regex.Posix
 import Text.Regex
 import Data.List 
 import Data.List.Split 
+import AronModule
 
+-- display image syntax
+-- [[ src=image/img.png w=50% h=30% ]]
 replaceImgTab::String->String
 replaceImgTab input = subRegex(mkRegex imgPattern) filterStr  rep 
                 where
@@ -17,25 +21,8 @@ replaceImgTab input = subRegex(mkRegex imgPattern) filterStr  rep
                         | length l > 0 =  head l 
                         | otherwise = input 
                         where 
-                            l = filter(\x-> length x > 0) $ splitRegex(mkRegex "^[[:space:]]*\\[\\[|\\]\\][[:space:]]*") input
-                            
-                            
-
-
-
--- split into two lists: odd index list and even index list
-splitList::[String]->([String], [String])
-splitList [] = ([], [])
-splitList [x] = ([x], [])
-splitList (x:y:xs) = (x:xp, y:yp) where (xp, yp) = splitList xs
-
-unwrap::Maybe a -> a
-unwrap Nothing = error "this is nothing from unwrap" 
-unwrap (Just x) = x
-
-codelist = splitRegex(mkRegex "\\[|\\]") "what[code1][code2]"
-
-
+                            l = filter(\x-> length x > 0) $ splitRegex(mkRegex "^[[:space:]]*{{|}}[[:space:]]*") input
+ 
 
 style::String->String->String->[String]->[String]
 style pat l r list = map(`op` rep) list 
@@ -59,46 +46,10 @@ codeHighLight pat list = map(`op` rep) list
                 where rep = "<span class=\"bracket\">\\1</span>"
                       op = subRegex $ mkRegex pat
 
-codeCapture::String->String
-codeCapture str = subRegex(mkRegex pat) str rep 
-                    where rep = "<cool>\\1</cool>" 
-                          pat = "(([^`]|`[^[]]*|\n*)*)"
-
-codeBlock::String->String->String->String
-codeBlock open close str = op str rep
-                        where op = subRegex (mkRegex pat)  
-                              rep = open ++ "\\1" ++ close
-                              pat = codeOpen ++ "(([^`]|`[^[]]*|\n*)*)" ++ codeClose --fix it
-                                  where 
-                                        codeOpen = "^[[:space:]]*`\\[[[:space:]]*$"
-                                        codeClose = "[[:space:]]*`\\][[:space:]]*$"
-
-mergeList::[String]->[String]->[String]
-mergeList [] [] = []
-mergeList  l  [] = l 
-mergeList []  r = r 
-mergeList (x:xs) (y:ys) = x:y:mergeList xs ys 
-
-mergeList2::[a]->[a]->Maybe [a]
-mergeList2 [] [] = Just [] 
-mergeList2 (x:xs) (y:ys) = 
-            case mergeList2 xs ys of
-            Just merged -> Just (x:y:merged)
-            Nothing  -> Nothing
-mergeList2 _ _  = Nothing
-
-
--- [[ src=file.png w=50% h=30% ]]
-imgTab::String->String
-imgTab input = subRegex(mkRegex imgPattern) (list !! 1)  rep 
-                where
-                    list = splitRegex(mkRegex "^[[:space:]]*\\[\\[|\\]\\][[:space:]]*$") input
-
-                    imgPattern = "(src[[:space:]]*=[[:space:]]*)([^[:space:]]+)" ++ "[[:space:]]+" ++
-                                 "(w[[:space:]]*=[[:space:]]*)([^[:space:]]+)" ++ "[[:space:]]+" ++ 
-                                 "(h[[:space:]]*=[[:space:]]*)([^[:space:]]*)"
-
-                    rep = "<img src=\\2 width=\\4 height=\\6>"
+displayPath::String->String->String->String
+displayPath path inFile outFile = if inFile == "mytext.txt" 
+                            then "file://" ++path ++ "/" ++ outFile 
+                            else ""
 
 
 lt                      =  "(<)"
@@ -114,7 +65,7 @@ openSpan                =  "<span class=\"keyword\">"
 closeSpan               =  "</span>"
 
 -- //xxx, // xxx
-comment                 =  "//.*$"
+comment                 =  " //.*$"
 commentOpen             =  "<span class=\"comment\">"
 commentClose            =  "</span>"
 
@@ -124,7 +75,7 @@ keyword                 =  "^[[:space:]]*(:[[:graph:]]+)[[:space:]]*"
 -- [ xxx ], [xxx]
 titleOpen               =  "<span class=\"tit\">"
 titleClose              =  "</span>"
-title                   =  "^[[:space:]]*\\[[a-zA-Z0-9 ]+\\]"
+title                   =  "^[[:space:]]*\\[[a-zA-Z0-9_: ]+\\]"
 
 -- { xxx }, {xxx}
 header                  =  "^[[:space:]]*{[a-zA-Z0-9 ]+}"                                                                       
@@ -150,61 +101,64 @@ main = do
     handle <- openFile inFile ReadMode
     contents <- hGetContents handle
 
+    currDir <- getCurrentDirectory
+    print currDir
+
     let line      = lines contents
 
-    let r_title   = mkRegex title
-    let r_header  = mkRegex header
-    let r_comment = mkRegex comment
+    let splitcode  = splitRegex(mkRegex "([[:blank:]]+`\\[[[:blank:]]*\n)|([[:blank:]]+`\\][[:blank:]]*\n)") (unlines line)
 
-    let list0     = replace lt html_lt line
-    let list1     = replace gt html_gt list0 
-    let list2     = style keyword openSpan closeSpan list1 
-    let list3     = style title titleOpen titleClose list2 
-    let list4     = style comment commentOpen commentClose list3
-
-    print "[list4----------------------------------"
-    print list4
-    print "list4]----------------------------------"
-    let list5     = map(\x->  replaceImgTab x) list4 
-
-    print "[list5----------------------------------"
-    print list5
-    print "list5]----------------------------------"
-    let list6     = style header headerOpen headerClose list5
-    print list6
-    let list7     = style numName spanNumOpen spanNumCose list6
-    
-    print list7
-    --let list8     = map(\x->  replaceImgTab x) list7 
-
-    let list8     = replace html_tab "\\0<br>" list7
-
-    --let list9     = codeBlock preOpen preClose (unlines list8):[]
-    let splitcode  = splitRegex(mkRegex "([[:blank:]]+`\\[[[:blank:]]*\n)|([[:blank:]]+`\\][[:blank:]]*\n)") (unlines list8)
-
+    -- [[--------------------------------------------------------------------------
     let oddList    = fst $ splitList splitcode
-    let evenList   = snd $ splitList splitcode
+    let evenListCode   = snd $ splitList splitcode
+    let evenListCode1  = replace lt html_lt evenListCode 
+    let evenListCode2  = replace gt html_gt evenListCode1 
 
---    let evenList1 = replace lt html_lt evenList 
---    let evenList2 = replace gt html_gt evenList1 
+    print oddList
+    print "----------------------------------"
+    let oddListList = map(\x->splitRegex(mkRegex "\n") x) oddList 
+    print oddListList
 
-
-
-    let styleCode1         = codeHighLight pattern evenList 
-    let styleCode2         = codeHighLight pattern1 styleCode1 
-     
-    let finalStyleCode     = map(preOpen ++) $ map(++ preClose) styleCode2 
-    print finalStyleCode
     
-    print finalStyleCode
-    print "----------------------------------------"
-    print $ length oddList
+    let list00 = map(\x -> replace lt html_lt x) oddListList
+    let list11 = map(\x -> replace gt html_gt x) list00 
 
-    let mergeAllList = mergeList oddList finalStyleCode 
-    print "[================================================="
-    print mergeAllList 
-    print "]================================================="
+    let listxx = map(\x -> if length x > 0 then init x else x) list11
+    let listxx11 = map(\x-> map(\y -> if length y == 0 then "<br>" else y) x) listxx 
+    print "================================="
+    print listxx11
+    print "================================="
+
+
+    --let list22 = map(\x -> style keyword openSpan closeSpan x) list11 
+    let list22 = map(\x -> style keyword openSpan closeSpan x) listxx11 
+    let list33 = map(\x -> style title titleOpen titleClose x) list22
+    let list44 = map(\x -> style comment commentOpen commentClose x) list33
+    let list55 = map(\y -> map(\x -> replaceImgTab x) y) list44 
+
+    let list66 = map(\x -> style header headerOpen headerClose x) list55
+    let list77 = map(\x -> style numName spanNumOpen spanNumCose x) list66
+    let list88 = map(\x -> replace html_tab "\\0<br>" x) list77
+    let fold   = map(\x -> foldr (++) "" x)list88
+    -- ]]--------------------------------------------------------------------------
+
+
+    --let pat        = "(\\[|\\]|\\(|\\)|{|})"
+    let styleCode1         = codeHighLight pattern evenListCode2 
+    let styleCode2         = codeHighLight pattern1 styleCode1 
+    let finalStyleCode     = map(preOpen ++) $ map(++ preClose) styleCode2 
+
+    --let mergeAllList = mergeList oddList finalStyleCode 
+    let mergeAllList = mergeList fold finalStyleCode 
+
     writeFile outFile $ html htmlOpen htmlClose mergeAllList 
 
     --putStr contents
     hClose handle
+
+    currDir <- getCurrentDirectory
+    let fullPath = displayPath currDir inFile outFile 
+    putStrLn ""
+    putStrLn "Html Path: copy following path to your browser"
+    putStrLn fullPath
+
