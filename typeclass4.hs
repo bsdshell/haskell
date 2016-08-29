@@ -1,3 +1,4 @@
+--[file=typeclass4.html title=""
 --Library/WebServer/Documents/zsurface/github/haskell/typeclass4.hs
 --Deconstructing type in Haskell
 
@@ -12,3 +13,4 @@ showShape(Rectangle x1 y1 x2 y2 ) = show(x1) ++ "  "++show(y1)++ "  " ++ show(x2
 main = do 
         print(showShape(Circle 3 4 5))
         print(showShape(Rectangle 1 2 3 4))
+--]

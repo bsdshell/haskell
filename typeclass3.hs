@@ -1,7 +1,8 @@
---Library/WebServer/Documents/zsurface/github/haskell/typeclass3.hs
---Typeclass in Haskell
---Shape is similar to interface in Java
---Circle and Rectangle are similar to class in Java
+--[file=typeclass3.html title=""
+-- Library/WebServer/Documents/zsurface/github/haskell/typeclass3.hs
+-- Typeclass in Haskell
+-- Shape is similar to interface in Java
+-- Circle and Rectangle are similar to class in Java
 
 data Point = Point Float Float deriving(Show)
 data Shape = Circle Float Float Float | Rectangle Float Float Float Float deriving (Show)
@@ -19,3 +20,4 @@ main = do
         print(circleShape)
         print(rectangleShape)
         print(listShape)
+--]

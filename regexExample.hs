@@ -10,27 +10,21 @@ re2 = "my food foo"     =~ "foo"::String
 re3 = "my foolish fool" =~ "foo."::[[String]]
 re4 = "my foolish fool" =~ "foo."::(String, String, String)
 
+--[file=regexExample.html title=""
 main = do
-        --[file=regexExample.html title=""
         let r1 = mkRegex "(dog){1,2}(cat)"
-        putStrLn $ subRegex r1 "dogcat"        "1. [\\0]{\\1} "--1. [dogcat]{dog} 
-
-        putStrLn $ subRegex r1 "dogdogcat"     "2. [\\0]{\\1} "--2. [dogdogcat]{dog} 
-
         putStrLn $ subRegex r1 "dogdogdogcat"  "3. [\\0]{\\1} "--3. [dogdogcat]{dog}
 
-        let r3 = mkRegex "a*(git)"
-
-        putStrLn $ subRegex r3 "aaaagit"       "5. [\\0] {\\1}"--5. [aaaagit] {git} 
+        let r3 = mkRegex "(na)*"
+        putStrLn $ subRegex r3 "banana"       "5. [\\0] {\\1} "--5. [] {}b5. [] {}a5. [nana] {na}
 
         let r4 = mkRegex "(void)+"
-
         putStrLn $ subRegex r4 "voidvoid"      "6. [\\0] {\\1}"--6. [voidvoid] {void} 
 
-        -- capture group
-        let r6 = mkRegex "[a-z]+(git)"
-
-        putStrLn $ subRegex r6 "1git   agit"   "7. [\\0] {\\1}"--7. [agit] {git}
+        -- capture group, capture email address
+        let r6 = mkRegex "([A-Za-z._-]+)+@(([a-z])+\\.([a-z]{2,4}))"
+        putStrLn $ subRegex r6 "root_admin.last-name@gmail.com"   "7. [\\0] {\\1}{\\2}"
+        --7. [root_admin.last-name@gmail.com] {root_admin.last-name}{gmail.com}
 
         -- capture phone number
         let p1 = mkRegex "[0-9]{3}[ -]?[0-9]{3}[ -]?[0-9]{4}" 
@@ -40,6 +34,9 @@ main = do
         putStrLn $ subRegex p1 "4161234483"    "9. [\\0]      "--9. [4161234483] 
 
         putStrLn $ subRegex p1 "416 123 4483"  "10. [\\0]     "--10. [416 123 4483]
+        
+        -- split string
+        print $ splitRegex(mkRegex ":") "PaloAlto:MountainView" -- ["PaloAlto","MountainView"]
 
         -- capture function in ObjectiveC
         let me = mkRegex "(-|\\+)[[:space:]]*\\([[:space:]]*[[:print:]]+[[:space:]]*\\)[[:space:]]*[[:graph:]]+\
@@ -63,7 +60,6 @@ main = do
         
         let bo = matchTest r8 "Sunnyvale"       
         putStrLn $ "Is matched = " ++ show bo   -- return False
-
         --]
 
         putStrLn $ subRegex me "- (void)" "[\\0]"
