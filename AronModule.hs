@@ -3,7 +3,6 @@ import Text.Regex.Posix
 import Text.Regex
 
 
-
 cat::[String]->String
 cat  [] = [] 
 cat (x:xs) = x ++ cat xs
@@ -88,4 +87,13 @@ mergeSort l = merge(mergeSort left) (mergeSort right)
 prime = sieve [2..]
     where sieve (p:xs) = p:sieve[ x | x <- xs, x `mod` p /= 0]
 
+
+readFileToList::FilePath->IO [String] 
+readFileToList f = readFile f >>= \contents -> return (lines contents) 
+
+writeToFile::FilePath->[String]->IO()
+writeToFile f list = writeFile f $ unlines list 
+
+fl::IO()
+fl = print "--------------------------------------------------------------------------------" 
 

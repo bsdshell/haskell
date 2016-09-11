@@ -1,0 +1,39 @@
+import System.IO
+import System.Environment
+import Text.Regex.Posix
+import Text.Regex
+
+
+--[file=moredo.html title="what is do statement in Haskell"
+--main = do
+--        putStr "dog"
+--        putStr "cat\n"
+
+-- alternative
+--main = putStr "cat" >> putStr "dog" >> putStr "\n"
+
+countChar::Char->String->Int
+countChar c = length.filter(==c) 
+
+countCharInFile::Char->FilePath->IO Int
+countCharInFile c f = readFile f >>= \contents-> return (countChar c contents) 
+                    
+
+main = do
+        num <- countCharInFile 'a' "./file33/file.txt" 
+        print num
+        
+
+--]
+
+--main = getArgs >= \[inFile, outFile] ->hGetContents handle >= \contents
+
+--    [inFile, outFile] <- getArgs
+--    handle <- openFile inFile ReadMode
+--    contents <- hGetContents handle
+--    let line = lines contents
+--    print line
+--
+--    writeFile outFile contents 
+--    putStr contents
+--    hClose handle

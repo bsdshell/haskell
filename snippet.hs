@@ -6,7 +6,6 @@ import AronModule
 import Data.List.Split
 import qualified Data.Text as Text
 
-
 printLn::String->String
 printLn "" = "\n"
 printLn s  = s ++ "\n"
@@ -15,75 +14,65 @@ mystrip::String->String
 mystrip s  = Text.unpack(Text.strip (Text.pack s ))
 
 main = do
-    --[inFile, outFile] <- getArgs
-    -- let inFile  = "/Users/cat/myfile/github/snippets/snippet_test.m" 
     let inFile  = "/Users/cat/myfile/github/snippets/snippet.m" 
     let outFile = "/Users/cat/myfile/github/snippets/snippet.vimrc" 
     handle <- openFile inFile ReadMode
     contents <- hGetContents handle
     let line = lines contents
-    putStrLn "line ============================"
+    fl
     mapM_ (print) line 
-    putStrLn "line ============================"
-    -- mapM putStr line 
+    fl
     let list = filter(\x -> length x > 0) line
-    -- mapM putStr list 
 
     let list2 = filter(\x-> length x > 0) $ splitWhen(\x -> (length $ trimWS x) == 0) line
-    putStrLn "list2 ============================"
+    fl
     mapM_ (print) list2
-    putStrLn "listHead ============================"
+    fl
     let listHead = map(\x-> " " ++ mystrip ( (head x)) ++ " ") $ list2
     mapM(print) listHead
     let listTail =  map(\x -> tail x) $ list2 
 
-    putStrLn "splitList ============================"
+    fl
     let splitList = map(map(mystrip)) $ map(splitRegex(mkRegex ":")) listHead
     mapM(print) splitList 
-    putStrLn "===================================="
-
-    putStrLn "listTail ==========================="
+    fl
     mapM(print) listTail 
-    putStrLn "listCR===================================="
+    fl
     let listCR =  map(map(\x -> "\\<CR>"++ mystrip x)) $ map(\x-> tail x) $ list2
     mapM(mapM(print)) listCR 
-    putStrLn "===================================="
+    fl
     let listLeft =  map(\x-> "" ++ (head x) ) listCR 
     let listRight =  map(\x-> (last x) ++""  ) listCR 
-
-    putStrLn "listLeft===================================="
+    fl
     mapM(print) listLeft 
-    putStrLn "===================================="
-    putStrLn "listRight===================================="
+    fl
     mapM(print) listRight 
-    putStrLn "===================================="
+    fl
 
     let newfull = map(map(++"\n")) listCR 
     mapM(print) newfull 
-    putStrLn "===================================="
+    fl
 
     let auto  = "autocmd BufEnter *.vimrc,*.tex,*.java,*.h,*.m iabbr <buffer> "
     let comList = map(\x -> "autocmd BufEnter " ++ last(x) ++ " iabbr <buffer> " ++ head(x) ++ " \n" ) splitList
     mapM(print) comList 
-    putStrLn "comList ================================="
+    fl
 
     mapM(print) comList 
-    putStrLn "comList2 ===================================="
+    fl
     let comList2 = map(\x -> x:[]) comList
     mapM(print) comList2
-    putStrLn "===================================="
+    fl
 
     let codeList = map(foldr(\x y -> x ++ y) "\n") newfull 
-    putStrLn "codeList ================================="
+    fl
     mapM(print)codeList 
-    putStrLn "=========================================="
+    fl
     let autoCode = zipWith(\x y -> x ++ y) comList codeList
-    putStrLn "autoCode================================="
+    fl
     mapM(print) autoCode
-    putStrLn "=========================================="
-
+    fl
     let str = foldl (\x y -> x ++ y) "" $  autoCode 
     writeFile outFile $ str  
 
-        --putStr contents
     hClose handle
