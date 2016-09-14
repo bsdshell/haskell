@@ -24,11 +24,11 @@ main = do
         -- capture group, capture email address
         let r6 = mkRegex "([A-Za-z._-]+)+@(([a-z])+\\.([a-z]{2,4}))"
         putStrLn $ subRegex r6 "root_admin.last-name@gmail.com"   "7. [\\0] {\\1}{\\2}"
-        --7. [root_admin.last-name@gmail.com] {root_admin.last-name}{gmail.com}
 
         -- capture phone number
         let p1 = mkRegex "[0-9]{3}[ -]?[0-9]{3}[ -]?[0-9]{4}" 
 
+        -- replace string
         putStrLn $ subRegex p1 "416-123-4483"  "8. [\\0]      "--8. [416-123-4483]
 
         putStrLn $ subRegex p1 "4161234483"    "9. [\\0]      "--9. [4161234483] 
@@ -74,8 +74,6 @@ main = do
         putStrLn $ subRegex me "- (NSstring*)swap_do:" "[\\0]"
         putStrLn $ subRegex me "- (NSstring*)swap_d###o :" "[\\0]"
         putStrLn $ subRegex me "- (NSstring*)swap_d###o " "[\\0]"
-
-
 
         print re1 
         print re2 
