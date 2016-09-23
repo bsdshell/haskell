@@ -12,14 +12,24 @@ re4 = "my foolish fool" =~ "foo."::(String, String, String)
 
 --[file=regexExample.html title=""
 main = do
+        -- replace pattern 
+        --
+        -- pattern = mkRegex "pattern"
+        --
+        -- subRegex pattern inputString replaceString => output text 
+        --
+        -- gx: https://hackage.haskell.org/package/regex-compat-0.95.1/docs/Text-Regex.html
+        -- 
         let r1 = mkRegex "(dog){1,2}(cat)"
-        putStrLn $ subRegex r1 "dogdogdogcat"  "3. [\\0]{\\1} "--3. [dogdogcat]{dog}
+        let inputStr = "dogdogdogcat"
+        let replace1 = "replacement [\\0]{\\1}"
+        putStrLn $ subRegex r1 inputStr1  replace1--3. [dogdogcat]{dog}
 
         let r3 = mkRegex "(na)*"
-        putStrLn $ subRegex r3 "banana"       "5. [\\0] {\\1} "--5. [] {}b5. [] {}a5. [nana] {na}
+        putStrLn $ subRegex r3 "banana"        "input [\\0] {\\1} "--5. [] {}b5. [] {}a5. [nana] {na}
 
         let r4 = mkRegex "(void)+"
-        putStrLn $ subRegex r4 "voidvoid"      "6. [\\0] {\\1}"--6. [voidvoid] {void} 
+        putStrLn $ subRegex r4 "voidvoid"      "input [\\0] {\\1}"--6. [voidvoid] {void} 
 
         -- capture group, capture email address
         let r6 = mkRegex "([A-Za-z._-]+)+@(([a-z])+\\.([a-z]{2,4}))"
@@ -29,11 +39,11 @@ main = do
         let p1 = mkRegex "[0-9]{3}[ -]?[0-9]{3}[ -]?[0-9]{4}" 
 
         -- replace string
-        putStrLn $ subRegex p1 "416-123-4483"  "8. [\\0]      "--8. [416-123-4483]
+        putStrLn $ subRegex p1 "416-123-4483"  "input [\\0]      "--8. [416-123-4483]
 
-        putStrLn $ subRegex p1 "4161234483"    "9. [\\0]      "--9. [4161234483] 
+        putStrLn $ subRegex p1 "4161234483"    "input [\\0]      "--9. [4161234483] 
 
-        putStrLn $ subRegex p1 "416 123 4483"  "10. [\\0]     "--10. [416 123 4483]
+        putStrLn $ subRegex p1 "416 123 4483"  "input [\\0]     "--10. [416 123 4483]
         
         -- split string
         print $ splitRegex(mkRegex ":") "PaloAlto:MountainView" -- ["PaloAlto","MountainView"]
@@ -79,14 +89,3 @@ main = do
         print re2 
         print re3 
         print re4 
-
---        [aagit]{git}   kgit
---        this is [git] {git} 
---        [aaaagit] {git} 
---        git   [aagit] {git} 
---        agit   [aagit] {git}   [aaagit] {git} 
---        1git   [agit] {git}
---        True
---        "foo"
---        [["fool"],["fool"]]
---        ("my ","fool","ish fool")

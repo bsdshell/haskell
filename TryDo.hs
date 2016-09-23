@@ -37,6 +37,11 @@ main = do
         --writeToFile "./file1.txt" "side effects"
 --        let ll = ["A third of food produced world wild never get eaten", "banada"]
 --        writeToFile1 "./file2.txt" list 
+
+        let fname = "./file.txt"
+        num <- countCharInFile 'c' fname 
+        print $ "num=" ++ show(num)
+
         let path = "/Users/cat/try/"
         listFile <- listDirectory path 
         ll <- filterM(\x -> doesFileExist $ path ++ x) listFile 
