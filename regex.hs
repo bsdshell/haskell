@@ -9,6 +9,13 @@ refoo  = "my food foo"     =~ "foo"::String
 relist = "my foolish fool" =~ "foo."::[[String]]
 reseq  = "my foolish fool" =~ "foo."::(String, String, String)
 
+
+-- 100+
+---------------
+-- 100
+-- 100-
+-- [1..100][101...]
+
 suffixed n = show n ++ suffix
     where 
         suffix
@@ -68,7 +75,7 @@ main = do
         print refoo 
         print relist
         print reseq
-        print result
+        print $ map suffixed [1..301]; 
         print (f9 1) 
         print (f10 1) 
         print (f11 1) 
