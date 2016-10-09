@@ -16,6 +16,17 @@ select input url = case list of
                     where
                         list = reads input::[(Int, String)]
 
+readData::String->IO [[String]]
+readData fname = do 
+                list <- readFileToList bmfile
+                mapM (\x -> putStr $ "[" ++ x ++ "]") list 
+                fl
+                let ll = filter(\x -> length x > 0) list
+                print ll
+                fl
+                let la = splitWhen(\x -> length x == 0) list 
+                return la 
+
 main = do 
         args <- getArgs
         print args
@@ -23,20 +34,10 @@ main = do
         let index = args !! 1 
         print $ "str =" ++ str
 
-        print "Hello World"
-        list <- readFileToList bmfile
-        mapM (\x -> putStr $ "[" ++ x ++ "]") list 
-        fl
-        let ll = filter(\x -> length x > 0) list
-        print ll
-        fl
-        let l3 = splitWhen(\x -> length x == 0) list 
-        fl
-        mapM(print) l3  
-        fl
+        strList <- readData bmfile 
 
         let regex = mkRegex str 
-        let wordURL =  filter(\x -> matchTest regex $ head x) l3
+        let wordURL =  filter(\x -> matchTest regex $ head x) strList
         mapM print wordURL
         fl
         let mlist = filter(\x -> length x > 0) wordURL 
