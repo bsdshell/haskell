@@ -96,5 +96,15 @@ writeToFile f list = writeFile f $ unlines list
 
 
 fl::IO()
-fl = print "--------------------------------------------------------------------------------" 
+fl = print $ foldr (++) "" $ replicate 80 "-" 
+
+ff::(Show var)=>String->var->IO()
+ff msg var = putStr (left ++ msg ++ right ++ "\n" ++ show(var) ++ "\n")
+                where
+                    line = foldr(++) "" $ replicate 80 "-"
+                    diff   = 80 - (length msg)
+                    half   = div diff 2
+                    isEven = mod diff 2
+                    left   = foldr(++) "" $ replicate (half + isEven)  "-"
+                    right  = foldr(++) "" $ replicate half  "-"
 

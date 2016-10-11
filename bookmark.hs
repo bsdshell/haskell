@@ -13,21 +13,6 @@ import System.Environment
 
 bmfile = "/Users/cat/myfile/github/bookmark/bookmark.txt"
 
--- list = [(Int, String)] = [(3, "")]
--- -------------------------------------------------------------------------------- 
--- (input=1, url=["pdf", "html"]) => "html"
--- -------------------------------------------------------------------------------- 
---select input url = case list of 
---                    [] ->show("Input must be a integer.") 
---                    _  ->fullPath 
---                    where
---                        list     = reads input::[(Int, String)]
---                        getNum   = fst $ list !! 0    -- [(3, "")] = > 3
---                        fullPath = url !! getNum
---                        fName    = takeFileName fullPath
---                        fDir     = takeDirectory fullPath
-
-
 select input url = case list of 
                     [] ->[] 
                     _  ->[fName, fDir]
@@ -37,6 +22,9 @@ select input url = case list of
                         fullPath = url !! getNum
                         fName    = filter(/= '"') $ takeFileName fullPath 
                         fDir     = takeDirectory fullPath
+                        fun s 
+                            | 2 > 3 = "dog"
+                            | otherwise = "cat"
 
 readData::String->IO [[String]]
 readData fname = do 
@@ -46,30 +34,25 @@ readData fname = do
                 let la = splitWhen(\x -> length x == 0) list 
                 return la 
 
-
 main = do 
         args <- getArgs
         print args
         let str = args !! 0 
         let index = args !! 1 
-        print $ "str =" ++ str
-
         strList <- readData bmfile 
 
         let regex = mkRegex str 
         let wordURL =  filter(\x -> matchTest regex $ head x) strList
-        mapM print wordURL
-        fl
+        putStrLn("")
+        ff "wordURL" wordURL
         let mlist = filter(\x -> length x > 0) wordURL 
-        putStrLn "-- mlist --"
-        mapM print mlist 
-        fl
+
+        ff "mlist" mlist 
 
         let urllist = map(\x -> x !! 1) mlist
         let nlist = [0..(length mlist - 1)] 
         print nlist
-        putStrLn "-- urllist --"
-        mapM print urllist
+        ff "urllist" urllist
 
         let itemList = zipWith(\x y -> show(x) ++ " " ++ y) nlist urllist
         mapM print itemList
@@ -77,21 +60,9 @@ main = do
 
         putStrLn "Please select item to open"
         input<- getLine
-        let url = select input urllist 
-        print $ "url="++url
-        let cmd = "open " ++ url
 
-        -- assume the file name does't contain ["] character
-        let fName = filter(/= '"') $ takeFileName  url
-        print $ "fName=[" ++ fName ++ "]"
-        let fDir   = takeDirectory url
-        print $ "dir=[" ++ fDir ++ "] fName=[" ++ fName ++ "]"
-
-        print $ "cmd =" ++ cmd
-
-        -- /Users/cat/GoogleDrive/Books/asymptote_tutorial.pdf
-        -- let arr = "asymptote_tutorial.pdf":[] 
-        let arr = fName:[] 
-        (_,_,_,_) <- createProcess(proc "open" arr){ cwd = Just "/Users/cat/GoogleDrive/Books/" }
-        print "dog"
+        let flist = select input urllist 
+        ff "flist" flist 
+        (_,_,_,_) <- createProcess(proc "open"  $ take 1 flist ){ cwd = Just $ last flist }
+        fl
         
