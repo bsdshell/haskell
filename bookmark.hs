@@ -17,12 +17,26 @@ bmfile = "/Users/cat/myfile/github/bookmark/bookmark.txt"
 -- -------------------------------------------------------------------------------- 
 -- (input=1, url=["pdf", "html"]) => "html"
 -- -------------------------------------------------------------------------------- 
+--select input url = case list of 
+--                    [] ->show("Input must be a integer.") 
+--                    _  ->fullPath 
+--                    where
+--                        list     = reads input::[(Int, String)]
+--                        getNum   = fst $ list !! 0    -- [(3, "")] = > 3
+--                        fullPath = url !! getNum
+--                        fName    = takeFileName fullPath
+--                        fDir     = takeDirectory fullPath
+
+
 select input url = case list of 
-                    [] ->show("Input must be a integer.") 
-                    _  ->show(url !! getNum) 
+                    [] ->[] 
+                    _  ->[fName, fDir]
                     where
-                        list   = reads input::[(Int, String)]
-                        getNum = fst $ list !! 0    -- [(3, "")] => 3
+                        list     = reads input::[(Int, String)]
+                        getNum   = fst $ list !! 0    -- [(3, "")] = > 3
+                        fullPath = url !! getNum
+                        fName    = filter(/= '"') $ takeFileName fullPath 
+                        fDir     = takeDirectory fullPath
 
 readData::String->IO [[String]]
 readData fname = do 
@@ -69,12 +83,7 @@ main = do
 
         -- assume the file name does't contain ["] character
         let fName = filter(/= '"') $ takeFileName  url
-        print ("dog" == "dog")
-        let trim = trimWS fName
-        print (fName == trim)
         print $ "fName=[" ++ fName ++ "]"
-        print $ "trim=[" ++ trim ++ "]"
-        print ((trimWS $ fName) == "asymptote_tutorial.pdf")
         let fDir   = takeDirectory url
         print $ "dir=[" ++ fDir ++ "] fName=[" ++ fName ++ "]"
 
