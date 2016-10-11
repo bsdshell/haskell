@@ -33,6 +33,7 @@ inorder Empty = []
 inorder (Node a l r) = (inorder l) ++ [a] ++ (inorder r) 
 
 
+
 -- ['a', 'b', 'c', 'd']
 subList::[Char]->Int->Int->[Char]
 subList [] _ _ = [] 

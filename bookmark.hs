@@ -1,3 +1,4 @@
+import System.IO
 import Data.Char 
 import Data.List.Split
 import AronModule 
@@ -5,27 +6,32 @@ import Text.Regex.Base.RegexLike
 import Text.Regex
 import System.Environment 
 import System.Console.GetOpt
+import System.Process
+import System.FilePath
+import System.Environment 
+
 
 bmfile = "/Users/cat/myfile/github/bookmark/bookmark.txt"
 
+-- list = [(Int, String)] = [(3, "")]
+-- -------------------------------------------------------------------------------- 
+-- (input=1, url=["pdf", "html"]) => "html"
+-- -------------------------------------------------------------------------------- 
 select input url = case list of 
-                    [] ->show("Invalid input") 
-                    _  ->case fst $ list !! 0 of 
-                                    0 ->show(url !! 0) 
-                                    1 ->show(url !! 1) 
+                    [] ->show("Input must be a integer.") 
+                    _  ->show(url !! getNum) 
                     where
-                        list = reads input::[(Int, String)]
+                        list   = reads input::[(Int, String)]
+                        getNum = fst $ list !! 0    -- [(3, "")] => 3
 
 readData::String->IO [[String]]
 readData fname = do 
                 list <- readFileToList bmfile
                 mapM (\x -> putStr $ "[" ++ x ++ "]") list 
-                fl
                 let ll = filter(\x -> length x > 0) list
-                print ll
-                fl
                 let la = splitWhen(\x -> length x == 0) list 
                 return la 
+
 
 main = do 
         args <- getArgs
@@ -48,6 +54,7 @@ main = do
         let urllist = map(\x -> x !! 1) mlist
         let nlist = [0..(length mlist - 1)] 
         print nlist
+        putStrLn "-- urllist --"
         mapM print urllist
 
         let itemList = zipWith(\x y -> show(x) ++ " " ++ y) nlist urllist
@@ -56,4 +63,26 @@ main = do
 
         putStrLn "Please select item to open"
         input<- getLine
-        print $ select input itemList 
+        let url = select input urllist 
+        print $ "url="++url
+        let cmd = "open " ++ url
+
+        -- assume the file name does't contain ["] character
+        let fName = filter(/= '"') $ takeFileName  url
+        print ("dog" == "dog")
+        let trim = trimWS fName
+        print (fName == trim)
+        print $ "fName=[" ++ fName ++ "]"
+        print $ "trim=[" ++ trim ++ "]"
+        print ((trimWS $ fName) == "asymptote_tutorial.pdf")
+        let fDir   = takeDirectory url
+        print $ "dir=[" ++ fDir ++ "] fName=[" ++ fName ++ "]"
+
+        print $ "cmd =" ++ cmd
+
+        -- /Users/cat/GoogleDrive/Books/asymptote_tutorial.pdf
+        -- let arr = "asymptote_tutorial.pdf":[] 
+        let arr = fName:[] 
+        (_,_,_,_) <- createProcess(proc "open" arr){ cwd = Just "/Users/cat/GoogleDrive/Books/" }
+        print "dog"
+        
