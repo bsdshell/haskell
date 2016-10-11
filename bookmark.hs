@@ -40,9 +40,11 @@ main = do
         let str = args !! 0 
         let index = args !! 1 
         strList <- readData bmfile 
-
+        let lineList = filter(\x -> length x > 0)strList
+        
+        ff "lineList" lineList 
         let regex = mkRegex str 
-        let wordURL =  filter(\x -> matchTest regex $ head x) strList
+        let wordURL =  filter(\x -> matchTest regex $ head x) lineList 
         putStrLn("")
         ff "wordURL" wordURL
         let mlist = filter(\x -> length x > 0) wordURL 
@@ -55,8 +57,7 @@ main = do
         ff "urllist" urllist
 
         let itemList = zipWith(\x y -> show(x) ++ " " ++ y) nlist urllist
-        mapM print itemList
-        fl
+        ff "itemList" itemList
 
         putStrLn "Please select item to open"
         input<- getLine
@@ -65,4 +66,3 @@ main = do
         ff "flist" flist 
         (_,_,_,_) <- createProcess(proc "open"  $ take 1 flist ){ cwd = Just $ last flist }
         fl
-        

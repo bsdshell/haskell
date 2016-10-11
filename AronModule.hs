@@ -94,7 +94,6 @@ readFileToList f = readFile f >>= \contents -> return (lines contents)
 writeToFile::FilePath->[String]->IO()
 writeToFile f list = writeFile f $ unlines list 
 
-
 fl::IO()
 fl = print $ foldr (++) "" $ replicate 80 "-" 
 
