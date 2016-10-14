@@ -107,3 +107,4 @@ ff msg var = putStr (left ++ msg ++ right ++ "\n" ++ show(var) ++ "\n")
                     left   = foldr(++) "" $ replicate (half + isEven)  "-"
                     right  = foldr(++) "" $ replicate half  "-"
 
+

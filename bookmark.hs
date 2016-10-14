@@ -44,7 +44,7 @@ main = do
         
         ff "lineList" lineList 
         let regex = mkRegex str 
-        let wordURL =  filter(\x -> matchTest regex $ head x) lineList 
+        let wordURL =  filter(\x -> matchTest regex $ map(\y -> toLower y ) $ head x) lineList 
         putStrLn("")
         ff "wordURL" wordURL
         let mlist = filter(\x -> length x > 0) wordURL 
