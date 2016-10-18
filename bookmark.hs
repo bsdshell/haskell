@@ -13,6 +13,8 @@ import System.Environment
 
 bmfile = "/Users/cat/myfile/github/bookmark/bookmark.txt"
 
+applist = [["open", ".pdf$"], ["open", "^http"]]
+
 select input url = case list of 
                     [] ->[] 
                     _  ->[fName, fDir]
@@ -22,9 +24,7 @@ select input url = case list of
                         fullPath = url !! getNum
                         fName    = filter(/= '"') $ takeFileName fullPath 
                         fDir     = takeDirectory fullPath
-                        fun s 
-                            | 2 > 3 = "dog"
-                            | otherwise = "cat"
+
 
 readData::String->IO [[String]]
 readData fname = do 
@@ -51,18 +51,24 @@ main = do
 
         ff "mlist" mlist 
 
-        let urllist = map(\x -> x !! 1) mlist
-        let nlist = [0..(length mlist - 1)] 
-        print nlist
-        ff "urllist" urllist
+        let appAndList = [(head x, trimWS $ y !! 1) | x <- applist, y <- wordURL, matchTest (mkRegex  (x !! 1)) (y !! 1) ]
 
-        let itemList = zipWith(\x y -> show(x) ++ " " ++ y) nlist urllist
-        ff "itemList" itemList
+
+        let urllist = map(\x -> x !! 1) mlist
+        ff "urllist" urllist
 
         putStrLn "Please select item to open"
         input<- getLine
 
-        let flist = select input urllist 
-        ff "flist" flist 
-        (_,_,_,_) <- createProcess(proc "open"  $ take 1 flist ){ cwd = Just $ last flist }
+        let strNum = reads  input::[(Int, String)]
+        let selectNum = fst $ head strNum 
+        print $ show(selectNum) 
+        let flist =  appAndList !! selectNum 
+        let nlist = [0..length appAndList -1]
+        ff "flist" flist
+        ff "nlist" nlist
+        let tupleList = zip nlist appAndList 
+        ff "tupleList" tupleList
+        ff "appAndList" appAndList
+        (_,_,_,_) <- createProcess(proc (fst flist)  [snd flist] ){ cwd = Nothing }
         fl

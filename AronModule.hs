@@ -1,6 +1,9 @@
 module AronModule where
 import Text.Regex.Posix
 import Text.Regex
+import System.Process
+import System.Environment
+
 
 
 cat::[String]->String
@@ -106,5 +109,25 @@ ff msg var = putStr (left ++ msg ++ right ++ "\n" ++ show(var) ++ "\n")
                     isEven = mod diff 2
                     left   = foldr(++) "" $ replicate (half + isEven)  "-"
                     right  = foldr(++) "" $ replicate half  "-"
+
+
+pp::(Show var)=>var->IO()
+pp var = print var 
+
+ls::IO()
+ls = createProcess(proc "ls"  [] ) >> return () 
+
+pwd::IO()
+pwd = createProcess(proc "pwd"  [] ) >> return ()
+
+cd::String->IO()
+cd p = createProcess(proc "cd"  [p] ) >> return ()
+
+en::String->IO String
+en s = getEnv s 
+
+run::String->IO () 
+run s = createProcess(proc s  [] ) >> return () 
+
 
 

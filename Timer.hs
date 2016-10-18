@@ -4,14 +4,14 @@ import Control.Concurrent.STM
 main = do
     timer1 <- newTimer (2 * 1000000)
     waitTimer timer1
-    putStrLn "Timer 1 expired"
+    putStrLn "Timer 2 expired"
 
-    timer2 <- newTimer (1 * 1000000)
+    timer2 <- newTimer (4 * 1000000)
     forkIO $ do
         waitTimer timer2
-        putStrLn "Timer 2 expired"
+        putStrLn "Timer 4 expired"
     stopTimer timer2
-    putStrLn "Timer 2 stopped"
+    putStrLn "Timer 4 stopped"
 
 data State = Start | Stop
 type Timer = (TVar State, TMVar ())
