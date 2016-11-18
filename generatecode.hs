@@ -13,8 +13,11 @@ import System.IO
 main = do 
         let hcodePath = "/Users/cat/myfile/github/haskell/text/haskell.txt"
         let jcodePath = "/Users/cat/myfile/github/haskell/text/java.txt"
+        let lcodePath = "/Users/cat/myfile/github/haskell/text/latex.txt"
+
         let hpath     = "/Users/cat/myfile/github/haskell/"
         let jpath     = "/Users/cat/myfile/github/java/"
+        let lpath     = "/Users/cat/myfile/github/math/"
         argList <- getArgs 
 
         print argList
@@ -24,6 +27,12 @@ main = do
             "h" -> do 
                     list <- readFileToList hcodePath 
                     let full = hpath ++ (head $ tail argList) ++ ".hs"
+                    print full
+                    isThere <- doesFileExist full
+                    if isThere == False then (writeToFile full list) else (print "file exists")
+            "l" -> do
+                    list <- readFileToList lcodePath 
+                    let full = lpath ++ (head $ tail argList) ++ ".tex"
                     print full
                     isThere <- doesFileExist full
                     if isThere == False then (writeToFile full list) else (print "file exists")

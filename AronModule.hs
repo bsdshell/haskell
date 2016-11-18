@@ -4,11 +4,23 @@ import Text.Regex
 import System.Process
 import System.Environment
 
+-------------------------------------------------------------------------------- 
+-- load shell environments inside GHC
+-- use the SAME NAME as in shell environments
+-------------------------------------------------------------------------------- 
 
 
 cat::[String]->String
 cat  [] = [] 
 cat (x:xs) = x ++ cat xs
+
+
+-- cat maybe list
+catMaybe::Maybe [Int]-> Maybe [Int] -> Maybe [Int]
+catMaybe Nothing Nothing           = Nothing
+catMaybe Nothing (Just list)       = Just list
+catMaybe (Just list) Nothing       = Just list
+catMaybe (Just list1) (Just list2) = Just (list1 ++ list2)
 
 -- check if string is empty
 isEmpty::String->Bool
@@ -62,11 +74,21 @@ codeCapture str = subRegex(mkRegex pat) str rep
 quickSort::[Int]->[Int]
 quickSort [] = []
 quickSort [x] = [x]
-quickSort l = quickSort(left) ++ p:[] ++ quickSort right 
+quickSort l = quickSort(left) ++ [p] ++ quickSort right 
                     where
                         left =  [x | x <- init l, x < p]
                         right = [x | x <- init l, x >= p]
                         p = last l 
+
+quickSort'::[Int]->[Int]
+quickSort' [] = []
+quickSort' (x:xs) = quickSort' ([ l | l <- xs, l < x]) ++ [x] ++ quickSort' ([ r | r <- xs, r >= x]) 
+
+-- note: quickSort1 [] -- get error
+-- print quickSort1 ([]::Int)  -- it works
+quickSort1::(Ord a)=>[a]->[a]
+quickSort1 [] = [] 
+quickSort1 (x:xs) = quickSort1 ([ l | l <- xs, l < x ]) ++ [x] ++ quickSort1 ([ r | r <- xs, r >= x])
 
 mergeSort::[Int]->[Int]
 mergeSort [] = []
@@ -126,8 +148,13 @@ cd p = createProcess(proc "cd"  [p] ) >> return ()
 en::String->IO String
 en s = getEnv s 
 
+cc::String->IO ()
+cc cmd = callCommand cmd
+
 run::String->IO () 
 run s = createProcess(proc s  [] ) >> return () 
 
+g::IO()
+g = getEnv "g" >>= \x -> print x >> return ()
 
 
