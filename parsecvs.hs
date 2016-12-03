@@ -31,8 +31,8 @@ capture s = s =~ "(\"[^\"]+\")|([0-9.]+)" :: [[String]]
 sub = \x -> subRegex (mkRegex "\\\\r\\\\n") x " "
 main = do
         list <- readFileToList fname
-        let lll  = map(\x -> map(\y -> if isStr $ head y then sub $ head y else head y) (capture x) ) list
-        let l3   = map(\l -> map(\x -> if isStr x then (trimQ x ++ pad (maxlen(l) - length(trimQ x) )) else pad (maxlen(l) - length x) ++ x ) l) lll
+        let list2  = map(\x -> map(\y -> if isStr $ head y then sub $ head y else head y) (capture x) ) list
+        let l3   = map(\l -> map(\x -> if isStr x then (trimQ x ++ pad (maxlen(l) - length(trimQ x) )) else pad (maxlen(l) - length x) ++ x ) l) list2
         let l33  = map(\l -> map(\x -> x ++ " ") l) l3
-        let l333 = map(\x -> foldr(++) [] x) l33
+        let l333 = map(\l -> foldr(++) [] l) l33
         writeToFile outname l333
