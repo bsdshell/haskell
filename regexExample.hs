@@ -4,6 +4,7 @@ import Text.Regex.Posix
 import Text.Regex
 import Text.Regex.Base
 import Text.Regex.Base.RegexLike
+import AronModule
 
 --[file=regexExample.html title=""
 
@@ -83,6 +84,21 @@ main = do
         
         let bo = matchTest r8 "Sunnyvale"
         putStrLn $ "Is matched = " ++ show bo -- return False
+
+--        let cvs1 = matchTest cvspat "\"with white space\""
+--        putStrLn $ "match cvs=[" ++ show cvs1 ++ "]" 
+
+        let cvspat = mkRegex "\\(\"[a-z]+\\)|\\([0-9]+\"\\)"
+        putStrLn $ "cvs=[" ++ subRegex cvspat "\"with white space\",123"   "[\\0]-[\\1]-[\\2]"
+
+        let (_, _, _, [year, month, day]) ="2013/01/06" =~ "([0-9]+)/([0-9]*)/([0-9]*)" :: (String,String,String,[String])
+        putStrLn year
+        putStrLn month 
+        putStrLn day 
+
+        fl
+        let ll = "\"dogcat\" 123 \"essential\" \"about me\"" =~ "(\"[^\"]+\")|([0-9]+)" :: [[String]]
+        print ll
         --]
 
         putStrLn $ subRegex me "- (void)" "[\\0]"

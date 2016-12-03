@@ -9,6 +9,7 @@
 \usepackage{xcolor}
 \usepackage{fullpage}
 \usepackage[inline]{asymptote}
+\usepackage{listings}
 \usetikzlibrary{arrows,decorations.pathmorphing,backgrounds,positioning,fit,petri}
 \newtheorem{theorem}{Theorem}
 \newtheorem{defintion}{Definition}
