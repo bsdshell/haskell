@@ -13,6 +13,7 @@ printLn s  = s ++ "\n"
 mystrip::String->String
 mystrip s  = Text.unpack(Text.strip (Text.pack s ))
 
+
 main = do
     let inFile  = "/Users/cat/myfile/github/snippets/snippet.m" 
     let outFile = "/Users/cat/myfile/github/snippets/snippet.vimrc" 
@@ -28,17 +29,18 @@ main = do
     fl
     mapM_ (print) list2
     fl
-    let listHead = map(\x-> " " ++ mystrip ( (head x)) ++ " ") $ list2
+    let listHead = map(\x-> " " ++ trim( (head x)) ++ " ") $ list2
+--    let listHead = map(\x-> " " ++ trimWS( (head x)) ++ " ") $ list2
     mapM(print) listHead
     let listTail =  map(\x -> tail x) $ list2 
 
     fl
-    let splitList = map(map(mystrip)) $ map(splitRegex(mkRegex ":")) listHead
+    let splitList = map(map(trim)) $ map(splitRegex(mkRegex ":")) listHead
     mapM(print) splitList 
     fl
     mapM(print) listTail 
     fl
-    let listCR =  map(map(\x -> "\\<CR>"++ mystrip x)) $ map(\x-> tail x) $ list2
+    let listCR =  map(map(\x -> "\\<CR>"++ trim x)) $ map(\x-> tail x) $ list2
     mapM(mapM(print)) listCR 
     fl
     let listLeft =  map(\x-> "" ++ (head x) ) listCR 

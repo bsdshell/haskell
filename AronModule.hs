@@ -3,6 +3,7 @@ import Text.Regex.Posix
 import Text.Regex
 import System.Process
 import System.Environment
+import qualified Data.Text as Text
 
 -------------------------------------------------------------------------------- 
 -- load shell environments inside GHC
@@ -30,6 +31,9 @@ isEmpty _  = False
 trimWS::String->String
 trimWS ""  = ""
 trimWS str = filter(/= ' ') str
+
+trim::String->String
+trim s  = Text.unpack $ Text.strip $ Text.pack s
 
 splitList::[String]->([String], [String])
 splitList [] = ([], [])
