@@ -7,11 +7,20 @@ import Text.Regex.Base
 import Text.Regex.Base.RegexLike
 import AronModule
 
+fname = "/Users/cat/myfile/github/haskell/text/ll.tex"
+
+sub = \x -> subRegex (mkRegex "\\|") x "\\\\\\0"
 
 main = do 
         print "Hello World"
-        let r1 = mkRegex "\\|"
-        let r2 = mkRegex "\\|"
-        let input = "{c|c|}"
-        let replace1 = "[\\\\\\0]"
-        putStrLn $ subRegex r2 input replace1            -- http://[google].com
+        list <- readFileToList fname 
+        print list
+        fl
+--        let r0 = mkRegex "\\\\\\|"
+--        let r0 = mkRegex "([^\\\\]|)"
+--        let replace0 = "[\\0]"
+--        let ll = map(\x -> subRegex r0 x replace0 ) list
+--        print ll
+
+        putStrLn $ sub "a|b|" 
+        putStrLn $ sub "a" 

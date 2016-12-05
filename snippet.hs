@@ -13,6 +13,8 @@ printLn s  = s ++ "\n"
 mystrip::String->String
 mystrip s  = Text.unpack(Text.strip (Text.pack s ))
 
+-- replace | => \| => '|' is special char in Vimrc file
+sub = \x -> subRegex (mkRegex "\\|") x "\\\\\\0"
 
 main = do
     let inFile  = "/Users/cat/myfile/github/snippets/snippet.m" 
@@ -40,7 +42,8 @@ main = do
     fl
     mapM(print) listTail 
     fl
-    let listCR =  map(map(\x -> "\\<CR>"++ trim x)) $ map(\x-> tail x) $ list2
+--    let listCR =  map(map(\x -> "\\<CR>"++ trim x)) $ map(\x-> tail x) $ list2
+    let listCR =  map(map(\x -> "\\<CR>"++ (sub $ trim x))) $ map(\x-> tail x) $ list2
     mapM(mapM(print)) listCR 
     fl
     let listLeft =  map(\x-> "" ++ (head x) ) listCR 
