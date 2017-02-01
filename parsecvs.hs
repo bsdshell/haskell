@@ -18,8 +18,8 @@ isStr s = if s !! 0 == '"' && s !! (length s -1) == '"' then True else False
 pad::Int->String
 pad n = foldr (++) "" $ replicate n "-"
 
-trim::String->String
-trim s = tail . init $ s 
+mytrim::String->String
+mytrim s = tail . init $ s 
 
 maxlen::[String]->Int
 maxlen [] = 0
@@ -33,7 +33,7 @@ sub = \x -> subRegex (mkRegex "\\\\r\\\\n") x " "
 main = do
         list <- readFileToList fname
         let llist = map(\l -> map(\x -> if isStr $ head x then sub $ head x else head x) (capture l) ) list
-        let plist = map(\l -> map(\x -> if isStr x then (trim x ++ pad(maxlen(l) - length (trim x) )) else pad(maxlen(l) - length x) ++ x ) l) llist
+        let plist = map(\l -> map(\x -> if isStr x then (mytrim x ++ pad(maxlen(l) - length (mytrim x) )) else pad(maxlen(l) - length x) ++ x ) l) llist
         let slist = map(\l -> map(\x -> x ++ " ") l) plist
         let flist = map(\l -> foldr(++) [] l) slist
         writeToFile outname flist 
