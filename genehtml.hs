@@ -13,6 +13,11 @@ import AronModule
 -- generate static html page
 
 array = [
+        "Difference between Mutex and Semaphore",
+        "Multiple Thread LinkedList Queue HashMap",
+        "Markov Chain Algorithm Generate Text",
+        "Java Thread",
+        "ffmpeg example",
         "Tableau Interview Questions",
         "Print Previous element from Binary Tree",
         "Tower Hanoi",
@@ -258,6 +263,7 @@ array = [
         "Java Help Compile Package ClassPath",
         "Mac OSX Full Screen Tab-Command Not working",
         "Install Terminal Color Theme in Mac OSX",
+        "Intellij Add Resources or Test Directory",
         "Intellij Remove Base Package",
         "Intellij Import your package",
         "Intellij Add Java File",
@@ -296,7 +302,12 @@ left_li = "<li><a style=\"text-decoration:none;\" href=\""
 href_li = "\"</a>"
 last_li = "</li>"
 htmlDir = "/Library/WebServer/Documents/zsurface/html/"
+
+
+-- change to different host name for live page
 host    = "http://localhost/zsurface/html/"
+-- host    = "http://zsurface/html/"
+
 --htmlDir = "/Users/cat/myfile/github/haskell/text/html/"
 htmlFile = "/Users/cat/myfile/github/haskell/text/index.html"
 pageFile = "/Users/cat/myfile/github/haskell/text/page.html"
