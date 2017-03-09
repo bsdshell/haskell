@@ -17,13 +17,15 @@ mystrip s  = Text.unpack(Text.strip (Text.pack s ))
 sub = \x -> subRegex (mkRegex "\\|") x "\\\\\\0"
 
 main = do
---    let inFile  = "/Users/cat/myfile/github/snippets/snippet.m" 
---    let outFile = "/Users/cat/myfile/github/snippets/snippet.vimrc" 
-    let inFile  = "/Users/cat/myfile/github/snippets/snippet_test.m" 
-    let outFile = "/Users/cat/myfile/github/snippets/snippet_test.vimrc" 
-    handle <- openFile inFile ReadMode
-    contents <- hGetContents handle
-    let line = lines contents
+    let inFile_snippet  = "/Users/cat/myfile/github/snippets/snippet.m" 
+    let inFile_secret  = "/Users/cat/myfile/private/secret.m" 
+    let outFile = "/Users/cat/myfile/private/secret.vimrc" 
+
+    line_snippet <- readFileToList inFile_snippet
+    line_secret <- readFileToList inFile_secret
+
+--    let line = lines contents
+    let line = line_snippet ++ line_secret 
     fl
     mapM_ (print) line 
     fl
@@ -37,17 +39,10 @@ main = do
 --    let listHead = map(\x-> " " ++ trimWS( (head x)) ++ " ") $ list2
     mapM(print) listHead
 
---    fl
---    let splitList = map(map(trim)) $ map(splitRegex(mkRegex ":")) listHead
---    mapM(print) splitList
---    fl
-
     fl
     let splitListThree = map(map(trim)) $ map(splitRegex(mkRegex ":")) listHead
     mapM(print) splitListThree
 
-    --   jlist_file : *.hs : java list
-    --   splitList = [jlist_file, *.hs]
     let splitList = map(\x -> take 2 x) splitListThree 
     mapM(print) splitList 
     fl
@@ -89,5 +84,3 @@ main = do
     fl
     let str = foldl (\x y -> x ++ y) "" $  autoCode 
     writeFile outFile $ str  
-
-    hClose handle
