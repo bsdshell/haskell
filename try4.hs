@@ -51,8 +51,8 @@ main = do
         [inFile, outFile] <- getArgs
         handle <- openFile inFile ReadMode
         contents <- hGetContents handle
+        print "dog"
 
-        let line      = lines contents
 
 --        print "try4" 
 --        print codelist

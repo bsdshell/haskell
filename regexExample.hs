@@ -47,7 +47,7 @@ main = do
         -- capture phone number
         let p1 = mkRegex "[0-9]{3}[ -]?[0-9]{3}[ -]?[0-9]{4}" 
 
-        -- https://hackage.haskell.org/package/regex-compat-0.95.1/docs/Text-Regex.html
+        -- gx https://hackage.haskell.org/package/regex-compat-0.95.1/docs/Text-Regex.html
         let r7 = mkRegexWithOpts "(\\.pdf)" True False
         let input = "/home/user/file/mybook.PDF"
         let callMeMaybe = matchRegex r7 input

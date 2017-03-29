@@ -13,6 +13,7 @@ import AronModule
 -- generate static html page
 
 array = [
+        "Test it only",
         "Difference between Mutex and Semaphore",
         "Multiple Thread LinkedList Queue HashMap",
         "Markov Chain Algorithm Generate Text",
@@ -263,6 +264,9 @@ array = [
         "Java Help Compile Package ClassPath",
         "Mac OSX Full Screen Tab-Command Not working",
         "Install Terminal Color Theme in Mac OSX",
+        "Gradle add package name file",
+        "Gradle Add resources folder to Project Layout",
+        "Gradle Add Local Jar",
         "Intellij Add Resources or Test Directory",
         "Intellij Remove Base Package",
         "Intellij Import your package",
@@ -297,7 +301,7 @@ array = [
         "Daily Note"
         ] 
 
-outname = "/Library/WebServer/Documents/zsurface/index.html"
+indexFile = "/Library/WebServer/Documents/zsurface/index.html"
 left_li = "<li><a style=\"text-decoration:none;\" href=\""
 href_li = "\"</a>"
 last_li = "</li>"
@@ -314,21 +318,68 @@ pageFile = "/Users/cat/myfile/github/haskell/text/page.html"
 removeSpace::String->String
 removeSpace s = filter(\x -> isSpace x == False) s 
 
-main = do 
-        linelist <- readFileToList htmlFile 
-        mapM(print) linelist 
-        let fileArray = map(\x -> "index" ++ (removeSpace x) ++ ".html") array 
-        let pathList = map(\x -> htmlDir ++ x) fileArray
-        let hostList = map(\x -> host ++ x) fileArray
-        let zipList = zip hostList array 
-        let menu1 = map(\x -> left_li ++ (fst x) ++ href_li ++ (snd x) ++ last_li) zipList 
-        print zipList
-        let htmlpage = map(\x -> if length (removeSpace x) > 0 then x else unlines menu1 ) linelist
-        writeToFile outname htmlpage 
-        ----------------------------------------------------------------------------
-        pagelist <- readFileToList pageFile 
-        let p_htmlpage = map(\x -> if length (removeSpace x) > 0 then x else unlines menu1 ) pagelist 
+--oldDir = "/Users/cat/myfile/github/java/text/ht/" 
+--newDir = "/Users/cat/myfile/github/java/text/new/" 
 
-        uniqueList <- filterM(\x -> doesFileExist x >>= \y -> return (y == False)) pathList 
-        mapM(\x -> writeToFile x p_htmlpage) uniqueList 
-        print "dog"
+--oldDir = "/Library/WebServer/Documents/zsurface/html/" 
+newDir = "/Library/WebServer/Documents/zsurface/newhtml/" 
+
+-- print partition n [] will cause error since print needs concrete type 
+-- split list to n blocks
+partition::Int->[a]->[[a]]
+partition _ [] = []
+partition n xs = (take n xs) : (partition n $ drop n xs)
+
+main = do 
+        allFiles <- listDirectory htmlDir 
+        mapM print allFiles
+        let files = take 200 allFiles 
+        pList <- filterM(\x -> doesFileExist $ htmlDir ++ x) files 
+        let fullList= map(\x -> htmlDir ++ x) pList 
+        let newList = map(\x -> newDir ++ x) files 
+
+        ffList <- mapM(\fn -> readFile fn >>=(\contents -> return(splitRegex(mkRegex "<!-- Column 2 start -->|<!-- Column 2 end -->") contents))) fullList
+
+        let fileArray = map(\x -> "index" ++ (removeSpace x) ++ ".html") array
+        let pathList  = map(\x -> htmlDir ++ x) fileArray
+        let hostList  = map(\x -> host ++ x) fileArray
+        let zipList   = zip hostList array
+        let menuHtml  = map(\x -> left_li ++ (fst x) ++ href_li ++ (snd x) ++ last_li) zipList
+
+--        print zipList
+        let middle = ["<!-- Column 2 start -->\n<ul>"] ++ menuHtml ++ ["</ul>\n<!-- Column 2 end -->"]
+        let contents = map(\l -> [head l] ++ middle ++ [last l]) ffList
+        zipWithM(\fn list -> writeToFile fn list) newList contents 
+--------------------------------------------------------------------------------------------------
+        fl
+        mapM print files
+        fl 
+        let files = take 200 $ drop 200 allFiles 
+        pList <- filterM(\x -> doesFileExist $ htmlDir ++ x) files 
+        let fullList= map(\x -> htmlDir ++ x) pList 
+        let newList = map(\x -> newDir ++ x) files 
+
+        ffList <- mapM(\fn -> readFile fn >>=(\contents -> return(splitRegex(mkRegex "<!-- Column 2 start -->|<!-- Column 2 end -->") contents))) fullList
+
+        let fileArray = map(\x -> "index" ++ (removeSpace x) ++ ".html") array
+        let pathList  = map(\x -> htmlDir ++ x) fileArray
+        let hostList  = map(\x -> host ++ x) fileArray
+        let zipList   = zip hostList array
+        let menuHtml  = map(\x -> left_li ++ (fst x) ++ href_li ++ (snd x) ++ last_li) zipList
+
+--        print zipList
+
+        let middle = ["<!-- Column 2 start -->\n<ul>"] ++ menuHtml ++ ["</ul>\n<!-- Column 2 end -->"]
+        let contents = map(\l -> [head l] ++ middle ++ [last l]) ffList
+        zipWithM(\fn list -> writeToFile fn list) newList contents 
+        fl
+        mapM print files
+        fl 
+
+--        ----------------------------------------------------------------------------
+--        -- write to index.html 
+        linelist <- readFileToList htmlFile 
+        let htmlpage = map(\x -> if length (removeSpace x) > 0 then x else unlines menuHtml ) linelist
+        writeToFile indexFile htmlpage 
+--        ----------------------------------------------------------------------------
+        print "Done!"
