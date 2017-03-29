@@ -307,12 +307,8 @@ href_li = "\"</a>"
 last_li = "</li>"
 htmlDir = "/Library/WebServer/Documents/zsurface/html/"
 
+host = "http://zsurface.com/html/"
 
--- change to different host name for live page
-host    = "http://localhost/zsurface/html/"
--- host    = "http://zsurface/html/"
-
---htmlDir = "/Users/cat/myfile/github/haskell/text/html/"
 htmlFile = "/Users/cat/myfile/github/haskell/text/index.html"
 pageFile = "/Users/cat/myfile/github/haskell/text/page.html"
 removeSpace::String->String
