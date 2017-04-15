@@ -7,13 +7,18 @@ import Text.Regex.Posix
 import Text.Regex
 import Text.Regex.Base
 import Text.Regex.Base.RegexLike
+import Data.Time.Clock.POSIX
+import Data.Time
+import Data.Time.Clock.POSIX
+
 import AronModule
 
 -- generate zsurface page, generate static page
 -- generate static html page
 
 array = [
-        "Test it only",
+        "Gmail Operator",
+        "Regular Expression",
         "Difference between Mutex and Semaphore",
         "Multiple Thread LinkedList Queue HashMap",
         "Markov Chain Algorithm Generate Text",
@@ -305,7 +310,6 @@ indexFile = "/Library/WebServer/Documents/zsurface/index.html"
 left_li = "<li><a style=\"text-decoration:none;\" href=\""
 href_li = "\"</a>"
 last_li = "</li>"
-htmlDir = "/Library/WebServer/Documents/zsurface/html/"
 
 host = "http://zsurface.com/html/"
 
@@ -314,11 +318,8 @@ pageFile = "/Users/cat/myfile/github/haskell/text/page.html"
 removeSpace::String->String
 removeSpace s = filter(\x -> isSpace x == False) s 
 
---oldDir = "/Users/cat/myfile/github/java/text/ht/" 
---newDir = "/Users/cat/myfile/github/java/text/new/" 
-
---oldDir = "/Library/WebServer/Documents/zsurface/html/" 
-newDir = "/Library/WebServer/Documents/zsurface/newhtml/" 
+htmlDir = "/Library/WebServer/Documents/zsurface/html"
+newDir = "/Library/WebServer/Documents/zsurface/newhtml" 
 
 -- print partition n [] will cause error since print needs concrete type 
 -- split list to n blocks
@@ -326,18 +327,22 @@ partition::Int->[a]->[[a]]
 partition _ [] = []
 partition n xs = (take n xs) : (partition n $ drop n xs)
 
+randomName::IO String
+randomName = getPOSIXTime >>= \t  -> return( "/Library/WebServer/Documents/zsurface/html_" ++ (show $ ceiling t))
+
 main = do 
+        createDirectory newDir 
         allFiles <- listDirectory htmlDir 
         mapM print allFiles
         let files = take 200 allFiles 
-        pList <- filterM(\x -> doesFileExist $ htmlDir ++ x) files 
-        let fullList= map(\x -> htmlDir ++ x) pList 
-        let newList = map(\x -> newDir ++ x) files 
+        pList <- filterM(\x -> doesFileExist $ htmlDir ++ "/" ++ x) files 
+        let fullList= map(\x -> htmlDir ++ "/" ++ x) pList 
+        let newList = map(\x -> newDir ++ "/" ++ x) files 
 
         ffList <- mapM(\fn -> readFile fn >>=(\contents -> return(splitRegex(mkRegex "<!-- Column 2 start -->|<!-- Column 2 end -->") contents))) fullList
 
         let fileArray = map(\x -> "index" ++ (removeSpace x) ++ ".html") array
-        let pathList  = map(\x -> htmlDir ++ x) fileArray
+        let pathList  = map(\x -> htmlDir ++ "/" ++ x) fileArray
         let hostList  = map(\x -> host ++ x) fileArray
         let zipList   = zip hostList array
         let menuHtml  = map(\x -> left_li ++ (fst x) ++ href_li ++ (snd x) ++ last_li) zipList
@@ -351,14 +356,14 @@ main = do
         mapM print files
         fl 
         let files = take 200 $ drop 200 allFiles 
-        pList <- filterM(\x -> doesFileExist $ htmlDir ++ x) files 
-        let fullList= map(\x -> htmlDir ++ x) pList 
-        let newList = map(\x -> newDir ++ x) files 
+        pList <- filterM(\x -> doesFileExist $ htmlDir ++ "/" ++ x) files 
+        let fullList= map(\x -> htmlDir ++ "/" ++ x) pList 
+        let newList = map(\x -> newDir ++ "/" ++ x) files 
 
         ffList <- mapM(\fn -> readFile fn >>=(\contents -> return(splitRegex(mkRegex "<!-- Column 2 start -->|<!-- Column 2 end -->") contents))) fullList
 
         let fileArray = map(\x -> "index" ++ (removeSpace x) ++ ".html") array
-        let pathList  = map(\x -> htmlDir ++ x) fileArray
+        let pathList  = map(\x -> htmlDir ++ "/" ++ x) fileArray
         let hostList  = map(\x -> host ++ x) fileArray
         let zipList   = zip hostList array
         let menuHtml  = map(\x -> left_li ++ (fst x) ++ href_li ++ (snd x) ++ last_li) zipList
@@ -375,7 +380,16 @@ main = do
 --        ----------------------------------------------------------------------------
 --        -- write to index.html 
         linelist <- readFileToList htmlFile 
-        let htmlpage = map(\x -> if length (removeSpace x) > 0 then x else unlines menuHtml ) linelist
-        writeToFile indexFile htmlpage 
+        let indexPage = map(\x -> if length (removeSpace x) > 0 then x else unlines menuHtml ) linelist
+        writeToFile indexFile indexPage 
 --        ----------------------------------------------------------------------------
-        print "Done!"
+        pagelist <- readFileToList pageFile 
+        let htmlPage = map(\x -> if length (removeSpace x) > 0 then x else unlines menuHtml) pagelist 
+        uniqueList <- filterM(\x -> doesFileExist x >>= \y -> return (y == False)) pathList 
+        mapM(\x -> writeToFile x htmlPage) uniqueList 
+--        ----------------------------------------------------------------------------
+        oldHtmlName <- randomName
+        print oldHtmlName
+        renameDirectory htmlDir oldHtmlName 
+        renameDirectory oldHtmlName htmlDir
+--        ----------------------------------------------------------------------------

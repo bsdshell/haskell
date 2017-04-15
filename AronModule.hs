@@ -16,6 +16,10 @@ cat  [] = []
 cat (x:xs) = x ++ cat xs
 
 
+replaceList::[String]->String->String->[String]
+replaceList [] _ _ = [] 
+replaceList (x:xs) p r = subRegex (mkRegex p) x r : replaceList xs p r 
+
 -- cat maybe list
 catMaybe::Maybe [Int]-> Maybe [Int] -> Maybe [Int]
 catMaybe Nothing Nothing           = Nothing

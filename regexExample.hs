@@ -27,8 +27,8 @@ main = do
         -- 
         let r1 = mkRegex "google"
         let input = "http://google.com"
-        let replace1 = "[\\0]"
-        putStrLn $ subRegex r1 input replace1            -- http://[google].com
+        let replacement = "[yahoo]"
+        putStrLn $ subRegex r1 input replacement            -- http://[google].com
 
         let r3 = mkRegex "(na)*"
         putStrLn $ subRegex r3 "banana" "[\\0] {\\1}"    -- [] {}b5. [] {}a5. [nana] {na}
