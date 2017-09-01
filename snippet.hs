@@ -17,9 +17,10 @@ mystrip s  = Text.unpack(Text.strip (Text.pack s ))
 sub = \x -> subRegex (mkRegex "\\|") x "\\\\\\0"
 
 main = do
-    let inFile_snippet  = "/Users/cat/myfile/github/snippets/snippet.m" 
-    let inFile_secret  = "/Users/cat/myfile/private/secret.m" 
-    let outFile = "/Users/cat/myfile/private/secret.vimrc" 
+    home <- getEnv "HOME"
+    let inFile_snippet = home ++ "/myfile/github/snippets/snippet.m"
+    let inFile_secret  = home ++ "/myfile/private/secret.m"
+    let outFile        = home ++ "/myfile/private/secret.vimrc"
 
     line_snippet <- readFileToList inFile_snippet
     line_secret <- readFileToList inFile_secret
@@ -82,5 +83,5 @@ main = do
     fl
     mapM(print) autoCode
     fl
-    let str = foldl (\x y -> x ++ y) "" $  autoCode 
-    writeFile outFile $ str  
+    let blockCodeList = foldl (\x y -> x ++ y) "" $  autoCode 
+    writeFile outFile $ blockCodeList  
