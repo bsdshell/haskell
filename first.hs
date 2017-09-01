@@ -65,8 +65,8 @@ mergeSort::(Ord a)=>[a]->[a]
 mergeSort xs     | (length xs) <= 1 = xs 
                  | otherwise = union(mergeSort(take (div (length xs) 2) xs), mergeSort(drop (div (length xs) 2) xs))
 
-myHead::[a]->a
-myHead (x:xs) = x
+myHeader::[a]->a
+myHeader (x:xs) = x
 
 myTail::[a]->a
 myTail (x:[]) = x 
