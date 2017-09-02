@@ -3,9 +3,14 @@ import System.IO
 import System.Environment
 import System.Directory
 
+fileDir = "/Users/longshu/try/test1"
 main = do 
         print "Hello World"
-        let listOfFullPath = ["/home/name/oldFile.txt"]
-        let dummyOutput = map(\x -> renameFile x  "/home/name/newFile1.txt") listOfFullPath
+        setCurrentDirectory fileDir
+        allFiles <- listDirectory fileDir
+        currDir <- getCurrentDirectory
+        mapM print allFiles
+        print $ "currDir=" ++ currDir 
+        mapM_(\x -> renameFile (currDir ++ "/" ++ x)  (fileDir ++ "/KKK_" ++ x)) allFiles 
         print "done!"
 
