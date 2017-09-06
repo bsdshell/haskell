@@ -4,35 +4,39 @@ import System.IO
 import System.Environment
 import System.Directory
 
--- rename -o dir  KK_
-oldDir = "/Users/longshu/try/test1"
-newDir = "/Users/longshu/try/test1"
+
+
+oldDir = "/Users/cat/try"
+newDir = "/Users/cat/try"
 main = do 
-        print "rename -o dir file_prefix"
-        print "rename -o /dir file_prefix"
+        print "rename file_prefix     -> Rename all in current directory"
+        print "rename dir file_prefix -> Create dir in current directory"
+        print "---------------------------------------------------------"
         argList <- getArgs 
         print argList
 
-        let option = head argList
-        let currDir = getCurrentDirectory
-        contents <- listDirectory oldDir
-        fileList <- filterM(\x -> doesFileExist $ oldDir ++ "/" ++ x) contents 
-        mapM print fileList 
-        print ("Option=" ++ option)
+        let firstArg = head argList
+        currDir <- getCurrentDirectory
+        print ("currDir=" ++ currDir)
+        print ("firstArg=" ++ firstArg)
 
-
+        contents <- listDirectory currDir 
+        fileList <- filterM(\x -> doesFileExist $ currDir ++ "/" ++ x) contents 
         let len = length argList
+
         case len of
             1 -> do
-                let argList = 
-                mapM_(\x -> renameFile (oldDir ++ "/" ++ x)  (newDir ++ "/" ++ dir ++ "/" ++ prefix ++ x)) fileList 
+                mapM print fileList 
+                mapM_(\x -> copyFile (currDir ++ "/" ++ x)  (currDir ++ "/" ++ firstArg ++ x)) fileList 
+            2 -> do
+                print "two Args"
+                print argList
+                let dir = argList !! 0 
+                let prefix = argList !! 1 
+                doesExist <- doesDirectoryExist (currDir ++ "/" ++ dir)
+                if doesExist == False then createDirectory (currDir ++ "/" ++ dir) else print "dir exist" 
+                mapM_(\x -> copyFile (currDir ++ "/" ++ x)  (currDir ++ "/" ++ dir ++ "/" ++ prefix ++ x)) fileList 
             3 -> do
-                case option of
-                        "-o" -> do
-                            let dir = argList !! 1
-                            let prefix = argList !! 2
-                            doesExist <- doesDirectoryExist (newDir ++ "/" ++ dir)
-                            if doesExist == False then createDirectory (newDir ++ "/" ++ dir) else print "dir exist" 
-                            mapM_(\x -> renameFile (oldDir ++ "/" ++ x)  (newDir ++ "/" ++ dir ++ "/" ++ prefix ++ x)) fileList 
-                        _  -> putStrLn "done!"
+                print "do nothing"
             _ -> putStrLn "len = "
+        
