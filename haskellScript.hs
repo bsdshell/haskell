@@ -14,19 +14,26 @@ main =  do
         --argList <- getArgs
         arg <- getArgs
         case arg of
-            [op, a1] -> do
+            [op, a1] -> do {
                 case op of
-                    "uzip" -> do
-                            (_,Just hout, _, h1) <- createProcess (proc "/usr/bin/unzip" [a1]){ cwd = Just "." }
-                            fl
-                    "gz"  -> do 
-                            (_,Just hout, _, h1) <- createProcess (proc "/usr/bin/gzip" [a1]){ cwd = Just "." }
-                            fl
-                    "ugz" -> do 
-                            (_,Just hout, _, h1) <- createProcess (proc "/usr/bin/gunzip" [a1]){ cwd = Just "." }
-                            fl
-                    _     -> do 
-                    fl
-            _       -> do 
-            fl
-        print "done!"
+                    "uzip" -> do {
+                            (_,Just hout, _, h1) <- createProcess (proc "/usr/bin/unzip" [a1]){ cwd = Just "." };
+                            out <- hGetContents hout;
+                            print out
+                    }
+                    "gz"  -> do {
+                            (_,Just hout, _, h1) <- createProcess (proc "/usr/bin/gzip" [a1]){ cwd = Just "." };
+                            out <- hGetContents hout;
+                            print out
+                    }
+                    "ugz" -> do {
+                            (_,Just hout, _, h1) <- createProcess (proc "/usr/bin/gunzip" [a1]){ cwd = Just "." };
+                            out <- hGetContents hout;
+                            print out
+                    }
+                    _ -> return () 
+            }
+            _ -> do {
+                print "arg nothing";
+            }
+        print "end!"
