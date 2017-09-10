@@ -6,27 +6,17 @@ import System.Environment
 import System.Directory
 import AronModule
 
+act::String -> IO () 
+act x = print x
+
+f x = case x of 
+            [op, a1, a2] -> do
+                case op of
+                     "zip" -> act >>= \x -> print x 
+                     _ ->  print "nothing" 
+            _ -> print "noting2" 
 main =  do
         argList <- getArgs
-        case argList of 
-            [op] -> do{
-                print "one arg"
-            }
-            [op, a1, a2] -> do{
-                case op of
-                    "zip" -> do {
-                            (_,Just hout, _, h1) <- createProcess (proc "/usr/bin/zip" ["-r", a1, a2]){ cwd = Just "." };
-                            out <- hGetContents hout;
-                            print out
-                    }
-                    _ -> return ()
-            }
-            [op, a1] -> do{
-                print "cat"
---                    case op of
---                        "zip" -> createProcess(proc "/usr/bin/zip" ["-r", a1]) >>= \(_, Just hout, _, h1) -> print hout
---                        "gz" -> createProcess(proc "/usr/bin/gzip" [a1]) >>= \(_, Just hout, _, h1) -> print hout
---                        _ -> return ()
-            }
-            _ -> print "move existing file to different directory" 
-        print "find out which module a function belongs to"
+        s <- f argList
+        print s
+        return ()
