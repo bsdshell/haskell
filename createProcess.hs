@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -Wall #-}
 import System.Process
 import Data.Char 
 import Control.Monad
@@ -12,7 +13,7 @@ act x = print x
 f x = case x of 
             [op, a1, a2] -> do
                 case op of
-                     "zip" -> act >>= \x -> print x 
+                     "zip" -> act "ff" 
                      _ ->  print "nothing" 
             _ -> print "noting2" 
 main =  do
