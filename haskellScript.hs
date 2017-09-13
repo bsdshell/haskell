@@ -27,11 +27,12 @@ main =  do
             }
             [op, a1, a2] -> do {
                 case op of
-                    "zip" -> do {
-                            (_,Just hout, _, h1) <- createProcess (proc (comp "zip") ["-r", a1, a2]){ cwd = Just "." };
-                            out <- hGetContents hout;
-                            print out
-                    }
+--                    "zip" -> do {
+--                            (_,Just hout, _, h1) <- createProcess (proc (comp "zip") ["-r", a1, a2]){ cwd = Just "." };
+--                            out <- hGetContents hout;
+--                            print out
+--                    }
+                    "zip" -> createProcess (proc (comp "zip") ["-r", a1, a2]){ cwd = Just "." } >>= (_,Just hout,_,_) -> hGetContents hout >>= print
                     "uzip" -> do {
                             (_,Just hout, _, h1) <- createProcess (proc (comp "uzip")[a1]){ cwd = Just "." };
                             out <- hGetContents hout;
