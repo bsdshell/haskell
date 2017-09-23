@@ -6,6 +6,7 @@ import Data.List
 import qualified Data.Vector as Vec 
 import AronModule
 
+-- vector example, dot product 
 main = do 
         print "Hello World"
 --        let v1 = Vec.fromList[1..2]
