@@ -4,6 +4,7 @@ import Text.Regex
 import System.Process
 import System.Environment
 import qualified Data.Text as Text
+import qualified Data.Vector as Vec 
 
 -------------------------------------------------------------------------------- 
 -- load shell environments inside GHC
@@ -165,4 +166,18 @@ run s = createProcess(proc s  [] ) >> return ()
 g::IO()
 g = getEnv "g" >>= \x -> print x >> return ()
 
+--dot::Vec.Vector Integer -> Vec.Vector Integer -> Integer 
+--dot v1 v2 = Vec.sum $ Vec.zipWith(\x y -> x*y) v1 v2
+
+--dot::[Integer] -> [Integer] -> Integer
+--dot x y = Vec.sum $ Vec.zipWith(\x y -> x*y) v1 v2 
+--            where
+--                v1 = Vec.fromList x
+--                v2 = Vec.fromList y 
+
+dot::[Double] -> [Double] -> Double 
+dot x y = Vec.sum $ Vec.zipWith(\x y -> x*y) v1 v2 
+            where
+                v1 = Vec.fromList x
+                v2 = Vec.fromList y 
 

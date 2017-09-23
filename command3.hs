@@ -3,7 +3,7 @@ import System.Process
 import System.IO
 import System.Environment
 
-f::[String] -> IO()
+f::[String] -> IO () 
 f x = case x of 
         [op, a1] -> case op of
                          "zip" -> createProcess (proc "/usr/bin/zip"    ["-r", (a1 ++ ".zip"), a1]){ cwd = Just "." } >>= \_ -> return () 
@@ -12,9 +12,15 @@ f x = case x of
                          "utar"-> createProcess (proc "/usr/bin/tar"    ["-xzvf", a1]){ cwd = Just "." } >>= \_ -> return () 
                          "uzip"-> createProcess (proc "/usr/bin/unzip"  [a1]){ cwd = Just "." } >>= \_ -> return () 
                          "ugz" -> createProcess (proc "/usr/bin/gunzip" [a1]){ cwd = Just "." } >>= \_ -> return () 
-                         "grep"-> createProcess (proc "/usr/bin/grep" ["-Hnris", "--color", "--include=\"*.hs\"", a1]){ cwd = Just "." } 
-                                   >>= \(_, Just hout,_,_) -> hGetContents hout 
-                                   >>= \out -> print out
+--                         "grep"-> createProcess (proc "/usr/bin/grep"   ["-Hnis", "--color", "--include=\"*.hs\"", a1, "."]){ cwd = Just ".", std_out=CreatePipe } 
+--                                   >>= \out -> case out of 
+--                                                 (_,_,Just hout,_) -> hGetContents hout >>= print 
+--                                                 _                 -> return () 
+
+                         "grep"-> createProcess (proc "/bin/ls" []){ cwd = Just ".", std_out=CreatePipe } 
+                                   >>= \out -> case out of 
+                                                 (_,_,Just hout,_) -> hGetContents hout >>= print 
+                                                 _                 -> return () 
                          _     -> return () 
         [op, a1, a2] -> do
             case op of
